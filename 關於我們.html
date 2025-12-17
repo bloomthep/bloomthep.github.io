@@ -2,8 +2,8 @@
 <html lang="zh-Hant">
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="icon" href="images/頭貼-53.png" type="image/png">
-  <link rel="apple-touch-icon" href="images/頭貼-53.png">
+  <link rel="icon" href="image/頭貼-53.png" type="image/png">
+  <link rel="apple-touch-icon" href="image/頭貼-53.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>關於我們</title>
@@ -113,7 +113,14 @@
   transition: all 0.25s ease;          /* 漸變效果 */
 }
 
-
+@font-face {
+  font-family: "HanyiSentySeaSpray";
+  src: url("HanyiSentySeaSpray.woff2") format("woff2"),
+       url("HanyiSentySeaSpray.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 /* 下拉選單內英文字體 */
 .dropdown-item {
   font-family: "HanyiSentySeaSpray", sans-serif; /* 中文預設字體 */
@@ -238,7 +245,7 @@
   -webkit-overflow-scrolling: touch;
 
   /* 背景圖片設定 */
-  background-image: url('images/漢堡背景-46.png');  /* 改成你的圖片路徑 */
+  background-image: url('image/漢堡背景-46.png');  /* 改成你的圖片路徑 */
   background-size: cover;       /* 讓圖片填滿 overlay */
   background-position: center;  /* 圖片置中 */
   background-repeat: no-repeat; /* 避免重複 */
@@ -834,24 +841,24 @@ body::-webkit-scrollbar-thumb:hover {
   width: 80px;
   height: 80px;
   border: none;
-  background: url('images/button-23.png') no-repeat center center;
+  background: url('image/button-23.png') no-repeat center center;
   background-size: contain;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .right-btn {
-  background-image: url('images/button.png');
+  background-image: url('image/button.png');
 }
 
 /* hover 效果 */
 .scroll-btn:hover {
-  background-image: url('images/button-hover-22.png');
+  background-image: url('image/button-hover-22.png');
   transform: scale(1.1);
 }
 
 .right-btn:hover {
-  background-image: url('images/button-hover-21.png');
+  background-image: url('image/button-hover-21.png');
   transform: scale(1.1);
 }
 
@@ -1122,7 +1129,7 @@ body::-webkit-scrollbar-thumb:hover {
   justify-content: center;     /* 水平置中 */
   width: 100%;
   height: 100px;               /* footer 高度，可依需求調整 */
-  background-image: url('images/footer-49.png');
+  background-image: url('image/footer-49.png');
   background-size: cover;      /* 圖片覆蓋整個 footer */
   background-position: center; /* 圖片置中 */
   background-repeat: no-repeat;
@@ -2154,8 +2161,8 @@ html, body {
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="綻息.html">
-        <img src="images/logo1.png" alt="綻息 Logo" height="45" class="logo-img">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/logo1.png" alt="綻息 Logo" height="45" class="logo-img">
       </a>
       <button class="navbar-toggler" type="button">
         <span class="bar"></span>
@@ -2165,7 +2172,7 @@ html, body {
       
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="綻息.html">主題介紹</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html">主題介紹</a></li>
           <li class="nav-item"><a class="nav-link" href="今日心籤.html">今日心籤</a></li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#song-section" id="worksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -2191,7 +2198,7 @@ html, body {
       <div class="nav-list">
     
         <div class="nav-item">
-          <a class="nav-link" href="綻息.html">主題介紹</a>
+          <a class="nav-link" href="index.html">主題介紹</a>
         </div>
         <div class="nav-item">
           <a class="nav-link" href="今日心籤.html">今日心籤</a>
@@ -2225,11 +2232,11 @@ html, body {
   </nav>
  
 <div class="top-image">
-  <img src="images/關於我們.jpg" alt="聽畫卡" />
+  <img src="image/關於我們.jpg" alt="聽畫卡" />
 </div>
 
 <div class="content">
-  <img src="images/box7-36.png" alt="前景圖2">
+  <img src="image/box7-36.png" alt="前景圖2">
   <div class="text-block">
     <h1>關於我們</h1>
     <p>
@@ -2240,7 +2247,7 @@ html, body {
 </div>
 
 <div class="after-content">
-  <img src="images/box7-1-36.png" alt="">
+  <img src="image/box7-1-36.png" alt="">
 </div>
 
 <div class="merch-section slide-in">
@@ -2255,18 +2262,18 @@ html, body {
   <div class="image-scroll">
     <div class="item-box">
       <div class="bg-layer"></div>
-      <img src="images/壓克力小立牌.jpg" alt="商品1" class="main-img">
-      <img src="images/周邊介紹-37.png" alt="介紹方塊1" class="label-img">
+      <img src="image/壓克力小立牌.jpg" alt="商品1" class="main-img">
+      <img src="image/周邊介紹-37.png" alt="介紹方塊1" class="label-img">
     </div>
     <div class="item-box">
       <div class="bg-layer"></div>
-      <img src="images/貼紙.jpg" alt="商品2" class="main-img">
-      <img src="images/周邊介紹1-37.png" alt="介紹方塊2" class="label-img">
+      <img src="image/貼紙.jpg" alt="商品2" class="main-img">
+      <img src="image/周邊介紹1-37.png" alt="介紹方塊2" class="label-img">
     </div>
     <div class="item-box">
       <div class="bg-layer"></div>
-      <img src="images/手工書.jpg" alt="商品3" class="main-img">
-      <img src="images/周邊介紹2-37.png" alt="介紹方塊3" class="label-img">
+      <img src="image/手工書.jpg" alt="商品3" class="main-img">
+      <img src="image/周邊介紹2-37.png" alt="介紹方塊3" class="label-img">
     </div>
   </div>
 
@@ -2274,14 +2281,14 @@ html, body {
 </div>
 
 <div class="behind-the-scenes ">
-  <img src="images/bts-bg-38.png" alt="背景" class="bts-bg">
-  <img src="images/bts-bg-40.png" alt="疊圖" class="bts-overlay">
-  <img src="images/bts-bg-41.png" alt="overlay2" class="bts-overlay fixed-overlay">
+  <img src="image/bts-bg-38.png" alt="背景" class="bts-bg">
+  <img src="image/bts-bg-40.png" alt="疊圖" class="bts-overlay">
+  <img src="image/bts-bg-41.png" alt="overlay2" class="bts-overlay fixed-overlay">
   <h2 class="bts-title slide-in">幕後花絮</h2>
   <div class="bts-scroll">
     <div class="bts-track slide-in">
-      <img src="images/long-image-39.png" alt="幕後花絮" />
-      <img src="images/long-image-39.png" alt="幕後花絮重複" />
+      <img src="image/long-image-39.png" alt="幕後花絮" />
+      <img src="image/long-image-39.png" alt="幕後花絮重複" />
     </div>
   </div>
 </div>
@@ -2291,7 +2298,7 @@ html, body {
   <!-- 成員1 -->
   <div class="member slide-in member1">
     <div class="member-image">
-      <img src="images/member-42.png" alt="成員1">
+      <img src="image/member-42.png" alt="成員1">
     </div>
     <div class="member-info">
       <h3>阿儒</h3>
@@ -2303,7 +2310,7 @@ html, body {
   <!-- 成員2 -->
   <div class="member slide-in member2 reverse">
     <div class="member-image">
-      <img src="images/member-43.png" alt="成員2">
+      <img src="image/member-43.png" alt="成員2">
     </div>
     <div class="member-info">
       <h3>好樂狄</h3>
@@ -2318,7 +2325,7 @@ html, body {
   <!-- 成員3 -->
   <div class="member slide-in member3">
     <div class="member-image">
-      <img src="images/member-44.png" alt="成員3">
+      <img src="image/member-44.png" alt="成員3">
     </div>
     <div class="member-info">
       <h3 class="tenny-font">Tenny</h3>
@@ -2335,7 +2342,7 @@ html, body {
   <!-- 成員4 -->
   <div class="member slide-in member4 reverse">
     <div class="member-image">
-      <img src="images/member-45.png" alt="成員4">
+      <img src="image/member-45.png" alt="成員4">
     </div>
     <div class="member-info">
       <h3>力挺</h3>
@@ -2370,7 +2377,7 @@ html, body {
 <div class="cursor"></div>
 <canvas id="trail"></canvas>
 <div id="pageTransition"></div>
-<img id="transitionLogo" src="images/英文logo.png" alt="Logo">
+<img id="transitionLogo" src="image/英文logo.png" alt="Logo">
 </body>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -2386,9 +2393,9 @@ html, body {
       navbarToggler.classList.toggle('active');
   
       if (logoImg.src.includes('logo.png')) {
-        logoImg.src = 'images/logo1.png'; // 彩色 logo
+        logoImg.src = 'image/logo1.png'; // 彩色 logo
       } else {
-        logoImg.src = 'images/logo.png';  // 白色 logo
+        logoImg.src = 'image/logo.png';  // 白色 logo
       }
     });
   
@@ -2420,11 +2427,11 @@ html, body {
         if (window.scrollY > 50) {
           navbar.classList.add('scrolled');
           navbarToggler.classList.add('active');
-          logoImg.src = 'images/logo.png'; // 滾動時也變彩色
+          logoImg.src = 'image/logo.png'; // 滾動時也變彩色
         } else {
           navbar.classList.remove('scrolled');
           navbarToggler.classList.remove('active');
-          logoImg.src = 'images/logo1.png'; // 回到白色
+          logoImg.src = 'image/logo1.png'; // 回到白色
         }
       }
     });

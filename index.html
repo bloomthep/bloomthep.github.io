@@ -1,0 +1,2386 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="icon" href="image/頭貼-53.png" type="image/png">
+  <link rel="apple-touch-icon" href="image/頭貼-53.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>綻息 - Healing Music Project</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+html, body {
+  overflow-x: hidden;
+}
+@font-face {
+  font-family: "HanyiSentySeaSpray";
+  src: url("HanyiSentySeaSpray.woff2") format("woff2"),
+       url("HanyiSentySeaSpray.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+body {
+  position: relative;
+  margin: 0;
+  font-family: "HanyiSentySeaSpray", sans-serif;
+  background-color:  #f0e9dd;
+  overflow-x: hidden;
+}
+/* 主游標保持原本樣子 */
+.cursor {
+  width: 35px;
+  height: 35px;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: opacity 0.3s ease, transform 0.15s ease-out;
+  animation: cursor-breathe 3s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes cursor-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+@media (max-width: 600px){
+  .cursor {
+  width: 25px;
+  height: 25px;
+  }
+}
+/* 光粒畫布 */
+#trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998;
+}
+
+#pageTransition {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  background: rgba(216, 167, 135, 1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 1000;
+  pointer-events: none;
+  transition: transform 1s ease-out;
+}
+
+#transitionLogo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  height: auto;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1001;
+  opacity: 0; /* 初始隱藏 */
+  transition: opacity 0.2s ease;
+}
+
+/* 整個頁面滾輪 */
+body::-webkit-scrollbar {
+  width: 12px;              /* 滾輪寬度 */
+}
+
+body::-webkit-scrollbar-track {
+  background: #f0f0f0;      /* 滾軌背景 */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #d8a787; /* 滾塊顏色 */
+  border-radius: 10px;        /* 圓角 */
+  border: 3px solid #f0f0f0; /* 讓滾塊周圍有空間 */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #dcd783; /* 滾塊滑過顏色 */
+}
+    /* 引入 ChenYuluoyan-2.0-Thin 字體 */
+@font-face {
+  font-family: 'ChenYuluoyan';
+  src: url('ChenYuluoyan-Thin-Monospaced.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fade-in-left,
+.fade-in-right {
+  opacity: 0;
+  transition: all 0.8s ease;
+  transform: translateX(-40px);
+}
+  
+  
+.fade-in-right {
+  transform: translateX(40px);
+}
+  
+.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+  
+/* Hero */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  text-align: center;
+  color:#ffffff;
+  background: #f0e9dd; /* 淺色背景，方便看層次 */
+  background-color: #f0e9dd; /* 跟你下面區塊顏色一致 */
+}
+.hero::after {
+  content:"";
+  position:absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(21,20,20,0.361);
+  z-index:1;
+}
+.hero-bg-color {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 860px; /* 只覆蓋上方想要的灰底高度 */
+  background:  #f0e9dd;
+  z-index: 2;
+}
+.hero-content {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8); /* 初始縮小 */
+  transform-origin: center center;
+  animation: heroZoomMove 1.2s ease-out forwards;
+  animation-delay: 0.5s; /* 載入後停頓 0.5 秒再開始動畫 */
+}
+@keyframes heroZoomMove {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);  /* 載入時縮小 */
+  }
+  50% {
+    transform: translate(-50%, -55%) scale(1.05); /* 微微往上 + 放大 */
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);    /* 回到原本位置與大小 */
+  }
+}
+    
+.hero-content h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+.hero-content p {
+  font-size: 1.5rem;
+}
+.hero-content .btn {
+  margin-top: 40px; /* 把數字調大一點就會往下 */
+}
+.hero-title {
+  max-width: 300px;       /* 最大寬度 */
+  width: 80%;             /* 預設佔 hero-content 的 80% */
+  height: auto;           /* 等比例縮放 */
+  padding-bottom: 20px;   /* 圖片和下方文字的距離 */
+
+  /* 初始位置 + 縮放 */
+  transform: translateY(10px) scale(0.9);
+  transform-origin: center center;
+
+  /* 動畫 */
+  animation: titleZoomMove 1.2s ease-out forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes titleZoomMove {
+  0% {
+    transform: translateY(10px) scale(0.9);  /* 載入時比較小 */
+  }
+  50% {
+    transform: translateY(0px) scale(1);  /* 微微放大 + 回到中間 */
+  }
+  100% {
+    transform: translateY(20px) scale(1);    /* 最終大小 + 保留原本往下 10px */
+  }
+}
+.hero-subtitle {
+  margin-top: 20px;  /* 向下移 20px，可依需求調整 */
+  margin-bottom: 10px; /* 保留下方間距 */
+  text-align: center;
+}
+.hero-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;   /* hero 區塊全螢幕高度 */
+  overflow: hidden;
+}
+/* slider 背景圖鋪滿並裁切 */
+.hero-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* 保持比例並裁切，避免灰色 */
+  display: block;
+}
+/* slider 容器要填滿 hero */
+.slider-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* overlay 改成完全響應式 */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* 允許拉伸變形 */
+  z-index: 3;
+  pointer-events: none;
+  transform: scale(2);
+  transform-origin: center center;
+  transition: transform 2s ease-out;
+}
+
+/* slider 內層：水平排列 */
+.slider {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s ease-in-out;
+}
+
+/* 每張圖片都要鋪滿容器 */
+.slider img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  flex: 0 0 100%;
+  display: block;
+}
+#soil-section {
+  position: relative;
+  width: 100%;
+  overflow-x: hidden; /* 關鍵：不允許橫向滑動 */
+  background-color: #f0e9dd;
+}
+
+/* 包圖層的容器，讓圖可以置中又能隨比例縮放 */
+.soil-wrapper {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: hidden; /* 讓圖的超出部分被裁掉 */
+}
+/* 讓 soil-wrapper 高度自動由第一層圖片決定 */
+.soil-wrapper::before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 60%; /* 這決定比例，可以調整 40%~70% 之間看看你圖的比例 */
+}
+.soil-layer {
+  position: absolute;
+  bottom: -200px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  width: 100vw;
+  height: auto;
+  object-fit: cover;
+  transition: opacity 1s ease, transform 1s ease, bottom 1s ease;
+}
+
+.soil-layer1 { z-index: 1; opacity: 1; }
+.soil-layer2 { z-index: 2; opacity: 0; transform: translateX(-50%) translateY(100px); }
+.soil-layer3 { z-index: 3; opacity: 0; transform: translateX(-50%) translateY(100px); }
+
+.soil-layer.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.content-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  z-index: 6;
+}
+.soil-text3 {
+  position: absolute;
+  top: -900%;   /* 控制距離上方的位置，可微調 */
+  left: 5%;   /* 控制距離左側的位置，可微調 */
+  width: 40%;
+  text-align: center; /* 讓文字水平置中 */
+  color: #6b4c3b;
+  background-image: url("image/white text box.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 2rem;
+  z-index: 7;
+
+  /* 讓文字在容器中垂直、水平置中 */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  opacity: 0; /* 預設透明 */
+  transform: translateY(50px) ; /* 從下方開始 */
+  transition: opacity 1s ease, transform 1s ease; /* 平滑過渡 */
+}
+
+/* 加上 visible 後的狀態（滑入畫面時觸發） */
+.soil-text3.visible {
+  opacity: 1;
+  transform: translateY(0) ;
+}
+
+
+
+/* 文字樣式 */
+.soil-text3 h3 {
+  font-size: clamp(2rem, 4.5vw, 2.4rem);
+  margin-bottom: 0.6rem;
+  font-weight: 200;
+  white-space: nowrap;
+}
+
+.soil-text3 p {
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.8;
+  white-space: nowrap;
+}
+
+.image-container {
+  position: absolute; /* 改成絕對定位 */
+  bottom: 40%;        /* 從下方開始 */
+  right: 5%;         /* 從右側開始 */
+  width: 45%;
+  aspect-ratio: 7/4;
+  z-index: 8;        /* 確保在土層上方 */
+  
+}
+
+.image {
+  position: absolute;
+  top: 45%;
+  left: -63%;
+  width: 150%;
+  height: auto;
+  opacity: 0;
+  transform: translate(30px, 30px);
+  z-index: 6;
+  transition: transform 1s, opacity 0.4s;
+}
+
+.image.main.active { opacity: 1; transform: translate(0,0); z-index:7; }
+.image.sub.active  { opacity: 1; transform: translate(50px,50px); z-index:5; }
+
+.corner-img {
+  position: absolute;
+  bottom: -65%;
+  right: 10%;
+  width: 50%;
+  height: auto;
+  z-index: 8;
+  transition: opacity 0.5s ease, transform 0.3s ease;
+}
+
+.next-btn {
+  position: absolute;
+  bottom: -20%;
+  right: 5%;
+  width: 5.5vw;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.next-btn:hover {
+  content: url("image/button-hover.png");
+  transform: scale(1.1);
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: transparent; /* 一開始透明 */
+  transition: background 0.3s ease;
+  /* overflow: hidden;  ← 這一行刪掉 */
+}
+
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(255, 255, 255);
+  transition: top 0.5s ease;
+  z-index: -1; /* 在文字跟圖下面 */
+}
+
+/* 當加上 .scrolled 時，背景才滑下來 */
+.navbar.scrolled::before {
+  top: 0;
+}
+.navbar-nav {
+  display: flex;
+  gap: 24px; /* 每個 nav-item 之間間隔 24px，可調整 */
+}
+
+    /* 初始文字白色 */
+.navbar-nav .nav-link {
+  color: #b67b56 !important; 
+  transition: color 0.3s;
+  font-size: 1.2rem;
+}
+.navbar-nav .nav-link:hover {
+  color: #d8a787 !important; /* 淺咖啡色 */
+  background-color: #f4efe7; /* 半透明咖啡色底框 */
+  border-radius: 25px; /* 圓角 */
+ 
+}
+/* 滾動後文字變咖啡色 */
+.navbar.scrolled .nav-link {
+  color: #b67b56 !important;
+}
+.navbar.scrolled .nav-link:hover {
+  color: #cec93e !important; /* 淺咖啡色 */
+}
+    .navbar .container {
+      padding-left: 0;
+    }
+    /* 初始把 Navbar 往上移出畫面 */
+    /* 強制調整 logo */
+.navbar-brand {
+  padding-left: 5px !important; /* 左側間距，確保大螢幕靠左一些 */
+}
+.navbar-brand img {
+  height: 45px;
+  display: block; /* 避免 inline spacing */
+  transition: all 0.3s ease;
+}
+
+.navbar {
+  transform: translateY(-100%);
+  animation: navbarSlideDown 1.2s ease-out forwards; /* 與 overlay 同步 */
+  animation-delay: 1s; /* 延遲開始，可微調 */
+}
+
+@keyframes navbarSlideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.dropdown-menu {
+  display: block;
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: hidden;
+  transition: all 0.25s ease;
+}
+/* 桌機版 dropdown 項目 hover */
+.navbar-nav .dropdown-menu .dropdown-item:hover {
+  color: #b67b56 !important;           /* 文字顏色 */
+  background-color: #f4efe7; /* 淡咖啡色背景 */
+  transition: all 0.25s ease;          /* 漸變效果 */
+}
+
+
+/* 下拉選單內英文字體 */
+.dropdown-item {
+  font-family: "HanyiSentySeaSpray", sans-serif; /* 中文預設字體 */
+}
+
+.dropdown-item span.english {
+  font-family: 'ChenYuluoyan', monospace; /* 英文改成你想要的字體 */
+}
+.navbar-overlay {
+  display: none; /* 預設隱藏 */
+}
+
+.logo-img {
+  transition: all 0.3s ease;
+}
+/* Section 標題 */
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* 卡片圖片 */
+.card img {
+  height: 200px;
+  object-fit: cover;
+}   
+.btn-explore {
+  background-color: #f0e9dd;        /* 初始白底 */
+  color: #6B4C3B;                 /* 咖啡色字 */
+  border: 2px solid #f0e9dd;     /* 咖啡色邊框 */
+  transition: all 0.3s ease;      /* 平滑過渡 */
+}
+
+.btn-explore:hover {
+  background-color: transparent;  /* 透明底 */
+  color: #ffffff;                 
+  border-color: #ffffff;          
+}
+.about-section {
+  position: relative;
+  background-color: #f0e9dd;
+  overflow: hidden; /* 避免底圖超出範圍 */
+  width: 100%;
+  height: 25vh;        /* 或你想要的高度 */
+}
+
+.about-bg {
+  position: absolute;
+  bottom: 0%;          /* 貼底 */
+  left: 50%;          /* 置中 */
+  transform: translateX(-50%) translateY(80px); /* 初始往下偏移 */
+  width: 100%;        /* 寬度可視情況調整 */
+  height: auto;
+  z-index: 0;         /* 在最底層 */
+  opacity: 0;     
+  pointer-events: none; /* 避免擋到文字點擊 */
+  content: url("image/裝飾1-14.png"); /* 桌面版圖片 */
+  transition: all 1s ease-out; /* 動畫時間 */
+}
+
+/* 進場後的狀態 */
+.about-bg.active {
+  transform: translateX(-50%) translateY(0);
+  opacity: 0.7;
+}
+.about-text {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 3; /* 確保在圖片上層 */
+}
+
+/* 基本文字樣式 */
+.about-text p {
+  font-family: 'HanyiSentySeaSpray', sans-serif;
+  font-weight: 500;
+  color: #7a5c4d;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  transition: all 1s ease;
+  font-size: 2rem;
+}
+
+/* 對齊設定 */
+.line1 { text-align: left; margin-left: 60px; margin-top: 5rem; }
+.line2 { text-align: right; margin-left: auto; margin-right: 0; max-width: 600px; }
+.line3 { text-align: center; max-width: 600px; margin: 0 auto; margin-bottom: 5rem; }
+/* ☁️ 雲朵初始狀態 */
+.concept-cloud,
+.character-cloud {
+  position: absolute;
+  width: 320px;
+  opacity: 0;
+  transform: translateY(60px); /* 初始下移 */
+  transition: all 1.2s ease-out;
+  z-index: 0;
+}
+
+/* ☁️ 專題理念右雲朵 */
+.concept-cloud {
+  right: 0;
+  top: 20%;
+}
+
+/* ☁️ 角色介紹左雲朵 */
+.character-cloud {
+  left: 0;
+  top: 0%;
+}
+
+/* ☁️ 進場後的樣子 */
+.concept-cloud.active,
+.character-cloud.active {
+  opacity: 0.8;
+  transform: translateY(0);
+}
+.concept-text .concept-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #6b4c3b; /* 咖啡色 */
+}
+.concept-text .concept-paragraph {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  line-height: 2.2;
+  color: #6b4c3b;
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
+}
+.character-text .character-desc {
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
+  font-size: 1.2rem;
+  line-height: 2;
+  letter-spacing: 2px;
+  color: #6b4c3b;
+}
+.character-text .character-name {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #6b4c3b;
+}
+.characters-section {
+  padding: 100px 0; /* 桌面版 */
+}
+.character-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+
+
+
+
+/* 懸浮社群 icon 區塊 */
+.floating-social {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px; /* ⬅️ 原本是 10px，改成更緊密 */
+  z-index: 1000;
+}
+
+/* 各個 icon */
+.social-icon-float {
+  font-size: 1.8rem;
+  color: #d8a787;
+  text-decoration: none;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icon-float:hover {
+  color: #b67b56;
+  transform: scale(1.15);
+}
+/* 滾動到 soil-section 時變色 */
+.floating-social.dark {
+  color: #6b4c3b;
+}
+
+.floating-social.dark .social-icon-float {
+  color: #6b4c3b;
+}
+
+.floating-social.dark .social-icon-float:hover {
+  color: #a07556;
+}
+
+.floating-social.dark .contact-text {
+  color: #6b4c3b;
+}
+
+.floating-social.dark .contact-text:hover {
+  color: #a07556;
+}
+/* Contact Us 文字 */
+.contact-text {
+  font-size: 1.5rem;
+  color: #d8a787;
+  font-weight: 600;
+  letter-spacing: 0px;
+  text-align: right;
+  transition: color 0.3s ease;
+  font-family: 'ChenYuluoyan', monospace; 
+}
+
+.contact-text:hover {
+  color: #b67b56;
+}
+
+#soil-section, .soil-wrapper {
+  position: relative;  /* 作為 footer 的定位參考 */
+  margin: 0;
+  padding: 0;
+}
+
+.footer-container {
+  position: absolute;  /* 疊在 soil-wrapper 上 */
+  bottom: 0;           /* 貼齊底部 */
+  left: 0;
+  width: 100%;
+  z-index: 20;         /* 確保在 soil-layer 上方 */
+}
+
+.footer-with-bg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;                /* footer 高度 */
+  background-color: transparent; /* 透明背景，透出土壤圖 */
+  background-image: url('image/footer-49.png');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  z-index: 10;                  /* 文字在上層 */
+  
+}
+
+.footer-text {
+  color: white;
+  text-align: center;
+  font-size: clamp(14px, 2vw, 20px);
+  padding: 0 10px;
+  margin-top: 2%;
+}
+
+
+
+/* 平板 */
+@media (max-width: 1280px){
+  .about-bg {
+    width: 100%;
+    bottom: 0%; /* 視覺位置微調 */
+    transform: translateX(-50%) translateY(50px); /* 初始往下偏移 */
+  }
+  .about-section {
+  height: 18vh;        /* 或你想要的高度 */
+}
+.about-text {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+/* 基本文字樣式 */
+.about-text p {
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+.content-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  z-index: 6;
+}
+.soil-layer { 
+  width: 110%; bottom: -16%;
+  overflow: hidden;  /* 超出容器部分隱藏 */
+ }
+.soil-text3 {
+  top: -900%;   /* 控制距離上方的位置，可微調 */
+  left: 5%;   /* 控制距離左側的位置，可微調 */
+  width: 40%;
+}
+
+
+/* 文字樣式 */
+.soil-text3 h3 {
+  font-size: clamp(2rem, 4.5vw, 2.4rem);
+  margin-bottom: 0.6rem;
+  font-weight: 200;
+  white-space: nowrap;
+}
+
+.soil-text3 p {
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.8;
+  white-space: nowrap;
+}
+.next-btn {
+    position: absolute;
+    bottom: -5%;
+    right: -2%;
+    width: 18%;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+  .image {
+  position: absolute;
+  top: 20%;
+  left: -80%;
+  width: 170%;
+  transform: translate(30px, 30px);
+  overflow: hidden;  /* 超出容器部分隱藏 */
+}
+.corner-img {
+  bottom: -55%;
+  right: 5%;
+  width: 65%;
+}
+}
+
+/* 平板 */
+@media (max-width: 1024px){
+  .hero-title {
+  max-width: 300px;       /* 最大寬度 */
+  width: 70%;             /* 預設佔 hero-content 的 80% */
+  height: auto;           /* 等比例縮放 */
+  padding-bottom: 20px;   /* 圖片和下方文字的距離 */
+
+}
+  .about-bg {
+    width: 100%;
+    bottom: 0%; /* 視覺位置微調 */
+    transform: translateX(-50%) translateY(50px); /* 初始往下偏移 */
+  }
+  .about-section {
+  height: 18vh;        /* 或你想要的高度 */
+}
+.about-text {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+/* 基本文字樣式 */
+.about-text p {
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+.content-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  z-index: 6;
+}
+.soil-text3 {
+  top: -900%;   /* 控制距離上方的位置，可微調 */
+  left: 5%;   /* 控制距離左側的位置，可微調 */
+  width: 40%;
+}
+
+
+/* 文字樣式 */
+.soil-text3 h3 {
+  font-size: clamp(2rem, 4.5vw, 2rem);
+  margin-bottom: 0.6rem;
+  font-weight: 200;
+  white-space: nowrap;
+}
+
+.soil-text3 p {
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.8;
+  white-space: nowrap;
+}
+.soil-layer { 
+  width: 140%; bottom: -16%;
+  overflow: hidden;  /* 超出容器部分隱藏 */
+ }
+  .soil-layer3 {
+    bottom: -150px;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .soil-wrapper::before {
+  padding-top: 75%; /* 這決定比例，可以調整 40%~70% 之間看看你圖的比例 */
+}
+
+.next-btn {
+    position: absolute;
+    bottom: -0%;
+    right: -6%;
+    width: 20%;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+  .image {
+  position: absolute;
+  top: 10%;
+  left: -80%;
+  width: 170%;
+  transform: translate(30px, 30px);
+  overflow: hidden;  /* 超出容器部分隱藏 */
+}
+.corner-img {
+  bottom: -50%;
+  right: 5%;
+  width: 70%;
+}
+}
+
+@media (max-width: 992px) {
+
+  /* 隱藏原 collapse（用 overlay 代替） */
+  .navbar .navbar-collapse { display: none !important; }
+  
+  /* Logo 固定左上（桌機不受影響，因為包在 media 裡） */
+  .navbar-brand {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 1001;
+  }
+  .navbar-brand img {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+
+  /* 漢堡按鈕固定右上，確保可點（z-index 高於 overlay） */
+  .navbar-toggler {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 1002;
+    background: none;
+    border: none;
+    padding: 6px;
+  }
+
+  /* Overlay */
+  .navbar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: none;          /* 由 JS 控制 */
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 120px;     /* 避開 logo / 漢堡 */
+  z-index: 1000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* 背景圖片設定 */
+  background-image: url('image/漢堡背景-46.png');  /* 改成你的圖片路徑 */
+  background-size: cover;       /* 讓圖片填滿 overlay */
+  background-position: center;  /* 圖片置中 */
+  background-repeat: no-repeat; /* 避免重複 */
+  }
+  .navbar-overlay.show {
+  display: flex;
+  }
+
+  /* 叉叉按鈕固定在右上方（比漢堡更高 z）*/
+  .navbar-overlay .overlay-close {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1003;
+    line-height: 1;
+  }
+
+  /* nav-list：整個區塊置中，但文字靠左 */
+  .navbar-overlay .nav-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 80%;
+    max-width: 360px;
+    box-sizing: border-box;
+  }
+
+  /* 主項目漸入動畫 */
+  .navbar-overlay .nav-list > .nav-item {
+    opacity: 0;
+    transform: translateY(18px);
+    margin: 10px 0;
+    transition: opacity 0.42s ease, transform 0.42s ease;
+    width: 100%;
+  }
+  .navbar-overlay.show .nav-list > .nav-item {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .navbar-overlay.show .nav-list > .nav-item:nth-child(1) { transition-delay: 0.08s; }
+  .navbar-overlay.show .nav-list > .nav-item:nth-child(2) { transition-delay: 0.16s; }
+  .navbar-overlay.show .nav-list > .nav-item:nth-child(3) { transition-delay: 0.24s; }
+  .navbar-overlay.show .nav-list > .nav-item:nth-child(4) { transition-delay: 0.32s; }
+  .navbar-overlay.show .nav-list > .nav-item:nth-child(5) { transition-delay: 0.40s; }
+  .navbar-overlay.show .nav-list > .nav-item:nth-child(6) { transition-delay: 0.48s; }
+
+ /* overlay 文字樣式 */
+.navbar-overlay .nav-link,
+.navbar-overlay .dropdown-item {
+  color: #6B4C3B !important;
+  font-size: 1.5rem;
+  line-height: 2.2;
+  text-decoration: none;
+  font-family: "HanyiSentySeaSpray", sans-serif;
+  transition: color 0.25s;
+}
+/* dropdown 項目文字顏色 */
+.navbar-overlay .dropdown-item {
+  color: #b67b56 !important;  /* 統一字色 */
+  font-size: 1.5rem;
+  line-height: 2.2;
+  text-decoration: none;
+  font-family: "HanyiSentySeaSpray", sans-serif;
+  transition: all 0.25s ease;
+}
+/* dropdown 項目 hover */
+.navbar-overlay .dropdown-item:hover {
+  color: #a0633e !important;      /* 文字顏色 */
+  background-color: #f4efe7; /* 底色，可以改透明度 */
+ border-radius: 20px;
+  transition: all 0.1s ease;      /* 漸變效果 */
+}
+
+  /* dropdown header：文字 + 加號同一行 */
+.navbar-overlay .dropdown .dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.navbar-overlay .dropdown .dropdown-header .nav-link {
+  display: inline-block;
+}
+
+.navbar-overlay .dropdown .dropdown-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #6B4C3B;
+  padding: 6px 8px;
+}
+
+ /* dropdown-menu 動畫 */
+.navbar-overlay .dropdown-menu {
+  display: block;
+  position: relative;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  padding-left: 20px;
+  margin-top: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+.navbar-overlay .dropdown.show .dropdown-menu {
+  max-height: 600px;
+  opacity: 1;
+  visibility: visible;
+  margin-top: 8px;
+}
+.navbar-overlay .dropdown-menu .dropdown-item {
+  padding: 8px 0;
+  font-size: 1.2rem;
+}
+.navbar-overlay .dropdown-item span.english {
+  font-family: 'ChenYuluoyan', monospace;
+}
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: -100%;      /* 初始完全隱藏 */
+  left: 0;
+  width: 100%;
+  height: 100%;    
+  background: rgb(255, 255, 255);
+  transition: top 0.5s ease;
+  z-index: -1;
+}
+.navbar.scrolled::before {
+  top: 0%;          
+  height: 500%;    /* 可調整比 navbar 高一點 */
+}
+/* 漢堡按鈕 */
+.navbar-toggler {
+  position: fixed;
+  top: 20px;
+  right: 18px;
+  z-index: 1002;
+  width: 30px;
+  height: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* 三條線 */
+.navbar-toggler .bar {
+  height: 3px;
+  width: 100%;
+  background-color: #d8a787; /* 初始白色 */
+  border-radius: 2px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* 滾動或 overlay 開啟後變粉色 */
+.navbar-toggler.active .bar {
+  background-color: #d8a787;
+}
+.about-text p {
+    font-size: 1.6rem;  /* 中螢幕縮小字體 */
+  }
+  .line1, .line2, .line3 {
+    text-align: center;  /* 中小螢幕文字置中 */
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+  .about-bg {
+    content: url("image/裝飾1-15.png");
+    width: 100%;
+    bottom: 0%; /* 視覺位置微調 */
+    transform: translateX(-50%) translateY(50px); /* 初始往下偏移 */
+  }
+  .about-section {
+  height: 17vh;        /* 或你想要的高度 */
+}
+.concept-text .concept-paragraph {
+  font-size: 1.3rem;
+  text-align: left;
+}
+.character-text .character-desc {
+  font-size: 1.3rem;
+}
+.soil-layer { 
+  width: 140%; bottom: -16%;
+  overflow: hidden;  /* 超出容器部分隱藏 */
+ }
+  .soil-layer3 {
+    bottom: -150px;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .soil-wrapper::before {
+  padding-top: 75%; /* 這決定比例，可以調整 40%~70% 之間看看你圖的比例 */
+}
+.soil-text3 {
+  position: absolute;
+  top: -800%;   /* 控制距離上方的位置，可微調 */
+  left: -28%;   /* 控制距離左側的位置，可微調 */
+  width: 120%;
+  padding: 1.5rem;
+  z-index: 10;
+  overflow: hidden;  /* 超出容器部分隱藏 */
+}
+.next-btn {
+    position: absolute;
+    bottom: -35%;
+    right: -6%;
+    width: 23%;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+  .image {
+  position: absolute;
+  top: 30%;
+  left: -80%;
+  width: 170%;
+  transform: translate(30px, 30px);
+  overflow: hidden;  /* 超出容器部分隱藏 */
+}
+.corner-img {
+  bottom: -70%;
+  right: 5%;
+  width: 80%;
+}
+}
+
+@media (max-width: 860px) {
+  .soil-text3 {
+  position: absolute;
+  top: -700%;   /* 控制距離上方的位置，可微調 */
+  left: -28%;   /* 控制距離左側的位置，可微調 */
+  width: 120%;
+  padding: 1.5rem;
+  z-index: 10;
+  overflow: hidden;  /* 超出容器部分隱藏 */
+}
+.next-btn {
+    position: absolute;
+    bottom: -30%;
+    right: -0%;
+    width: 23%;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+  .image {
+  position: absolute;
+  top: 30%;
+  left: -80%;
+  width: 160%;
+  transform: translate(20px, 20px);
+  overflow: hidden;  /* 超出容器部分隱藏 */
+}
+.corner-img {
+  bottom: -70%;
+  right: 10%;
+  width: 85%;
+}
+}
+/* 📱 RWD：在手機上雲朵會縮小 */
+@media (max-width: 768px) {
+  .concept-cloud,
+  .character-cloud {
+    width: 200px;
+    opacity: 0.6;
+  }
+  .soil-layer { 
+    width: 140%;
+     bottom: -16%; 
+    overflow: hidden;  /* 超出容器部分隱藏 */}
+  .soil-layer3 {
+    bottom: -16%;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .soil-wrapper::before {
+  padding-top: 75%; /* 這決定比例，可以調整 40%~70% 之間看看你圖的比例 */
+}
+.soil-text3 {
+  position: absolute;
+  top: -700%;   /* 控制距離上方的位置，可微調 */
+  left: -28%;   /* 控制距離左側的位置，可微調 */
+  width: 120%;
+  padding: 1.5rem;
+  z-index: 10;
+  overflow: hidden;  /* 超出容器部分隱藏 */
+}
+.next-btn {
+    position: absolute;
+    bottom: -30%;
+    right: -0%;
+    width: 23%;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+  .image {
+  position: absolute;
+  top: 35%;
+  left: -80%;
+  width: 160%;
+  transform: translate(20px, 20px);
+}
+.corner-img {
+  bottom: -73%;
+  right: 8%;
+  width: 75%;
+}
+}
+/* 平板 */
+@media (max-width: 756px) {
+  .about-bg {
+    content: url("image/裝飾1-15.png");
+    width: 100%;
+    bottom: 0%; /* 視覺位置微調 */
+    transform: translateX(-50%) translateY(50px); /* 初始往下偏移 */
+  }
+  .about-section {
+  height: 17vh;        /* 或你想要的高度 */
+}
+}
+/* 手機尺寸 (max-width: 600px) */
+@media (max-width: 600px) {
+
+ /* 🔸 強制漢堡按鈕大小 */
+.navbar-toggler {
+  width: 20px !important;   /* 強制縮小 */
+  height: 20px !important;
+  padding: 0 !important;    /* 移除 Bootstrap 預設 padding */
+  top: 30px !important;
+  right: 25px !important;
+}
+.navbar-toggler .bar {
+  height: 2px;  /* 線條稍細 */
+}
+
+/* 🔸 Logo 縮小一點 */
+.navbar-brand img {
+  height: 35px;
+}
+
+/* 🔸 文字大小調整（overlay 裡） */
+.navbar-overlay .nav-link,
+.navbar-overlay .dropdown-item {
+  font-size: 1.3rem;  /* 比原本 1.5rem 小一點 */
+  line-height: 2;
+}
+
+/* 🔸 dropdown 裡更小字體 */
+.navbar-overlay .dropdown-menu .dropdown-item {
+  font-size: 1.1rem;
+}
+
+/* 🔸 增加點距離避免擁擠 */
+.navbar-overlay .nav-list {
+  width: 85%;
+  max-width: 320px;
+}
+  /* 懸浮社群 icon 區塊 */
+  .floating-social {
+  bottom: 15px;
+  right: 15px;
+  gap: 2px; /* ⬅️ 原本是 10px，改成更緊密 */
+}
+/* 各個 icon */
+.social-icon-float {
+  font-size: 1.5rem;
+}
+/* Contact Us 文字 */
+.contact-text {
+  font-size: 1.1rem;
+  color: #d8a787;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: right;
+  transition: color 0.3s ease;
+}
+}
+/* 576px 以下：小手機模式 */
+@media (max-width: 576px) {
+  .concept-text .concept-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.character-text .character-name {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.concept-text .concept-paragraph {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  line-height: 2.2;
+  max-width: 80%;      /* 寬度不超過 80% */
+  margin: 0 auto;      /* 水平置中 */
+  text-align: center;  /* 文字置中對齊 */
+}
+.character-text .character-desc {
+  font-size: 1.2rem;
+  line-height: 2;
+  letter-spacing: 2px;
+  max-width: 80%;      /* 段落最大寬度 */
+  margin: 0 auto;      /* 整個段落區塊置中 */
+  text-align: left;    /* 文字靠左 */
+}
+  .soil-layer { width: 250%; bottom: 5vh; }
+  
+    
+  .soil-text3 {
+    position: absolute;
+    top: -1100%;   /* 控制距離上方的位置，可微調 */
+    left: 2%;   /* 控制距離左側的位置，可微調 */
+    width: 95%;
+    padding: 1.5rem;
+    z-index: 10;
+    opacity: 0; /* 預設透明 */
+    transform: translateY(30px);
+  }
+  
+  .soil-text3.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  .image-container {
+      height: 300px; /* 手機板高度 */
+    }
+  .soil-wrapper::before {
+    content: "";
+    display: block;
+    width: 100%;
+    padding-top: 170%; /* 這決定比例，可以調整 40%~70% 之間看看你圖的比例 */
+  }
+  .next-btn {
+      position: absolute;
+      bottom: -10%;
+      right: 5%;
+      width: 70px;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+  .image {
+    position: absolute;
+    top: 30%;
+    left: -100%;
+    width: 180%;
+    height: auto;
+    opacity: 0;
+    transform: translate(10px, 10px);
+    z-index: 6;
+    transition: transform 1s, opacity 0.4s;
+  }
+  .image.sub.active  {  transform: translate(30px,30px);}
+  .corner-img {
+    bottom: -48%;
+    right: 18%;
+    width: 100%;
+    height: auto;
+    z-index: 8;
+  }
+  }
+@media (max-width: 575px) {
+  .about-text p {
+    font-size: 1.4rem; /* 手機螢幕再縮小字體 */
+    line-height: 1.4;
+  }
+  .concept-text .concept-paragraph {
+    font-size: 1rem;
+    line-height: 1.8;
+    text-align: left;
+  }
+  .character-text .character-desc {
+  font-size: 1rem;
+}
+.character-text, .character-image {
+    flex: 1 1 100%;
+    text-align: left;
+    margin-bottom: 0; /* 取消 margin */
+  }
+
+  /* 文字和圖片中間加固定間距 */
+  .character-text + .character-image {
+    margin-top: 0.5rem; /* 文字下方空間縮小 */
+  }
+
+  .character-image img {
+    max-width: 90%;
+    height: auto; /* 保持比例 */
+  }
+
+  .characters-section {
+    padding-top: 20px;    /* 往上壓 */
+    padding-bottom: 20px; /* 往下壓 */
+  }
+  .character-image > div {
+    display: inline-block; /* 保留比例 */
+    width: 100%; 
+    height: auto;          /* 不要撐高整行 */
+  }
+}
+
+
+/* 手機版換另一張圖 */
+@media (max-width: 430px) {
+  
+  .about-bg {
+    content: url("image/裝飾1-15.png"); /* 手機版圖片 */
+    width: 100%;
+    bottom: 0%; /* 視覺位置微調 */
+    transform: translateX(-50%) translateY(50px); /* 初始往下偏移 */
+  }
+  .about-section {
+  height: 13vh;        /* 或你想要的高度 */
+}
+.concept-text .concept-title {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.character-text .character-name {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.concept-text .concept-paragraph {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  line-height: 2.2;
+  max-width: 90%;      /* 寬度不超過 80% */
+  margin: 0 auto;      /* 水平置中 */
+  text-align: left;  /* 文字置中對齊 */
+}
+.character-text .character-desc {
+  font-size: 1rem;
+  line-height: 2;
+  letter-spacing: 2px;
+  max-width: 90%;      /* 段落最大寬度 */
+  margin: 0 auto;      /* 整個段落區塊置中 */
+  text-align: left;    /* 文字靠左 */
+}
+.soil-layer { width: 250%; bottom: 5vh; }
+
+  
+.soil-text3 {
+  position: absolute;
+  top: -860%;   /* 控制距離上方的位置，可微調 */
+  left: 2%;   /* 控制距離左側的位置，可微調 */
+  width: 95%;
+  padding: 1.5rem;
+  z-index: 10;
+  opacity: 0; /* 預設透明 */
+  transform: translateY(30px);
+}
+/* 文字樣式 */
+.soil-text3 h3 {
+  font-size: clamp(1.8rem, 4.5vw, 1.8rem);
+  margin-bottom: 0.6rem;
+  font-weight: 200;
+  white-space: nowrap;
+}
+
+.soil-text3 p {
+  font-size: clamp(18px, 2.2vw, 18px);
+  line-height: 1.8;
+  white-space: nowrap;
+}
+
+  .soil-text3.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .image-container {
+    height: 300px; /* 手機板高度 */
+  }
+
+
+.soil-wrapper::before {
+  content: "";
+  display: block;
+  width: 100%;
+  padding-top: 170%; /* 這決定比例，可以調整 40%~70% 之間看看你圖的比例 */
+}
+
+.next-btn {
+    position: absolute;
+    bottom: -20%;
+    right: -10%;
+    width: 35%;
+    z-index: 10;
+    transition: all 0.3s ease;
+  }
+.image {
+  position: absolute;
+  top: 50%;
+  left: -110%;
+  width: 200%;
+  height: auto;
+  opacity: 0;
+  transform: translate(10px, 10px);
+  z-index: 6;
+  transition: transform 1s, opacity 0.4s;
+}
+.image.sub.active  {  transform: translate(30px,30px);}
+.corner-img {
+  bottom: -50%;
+  right: 5%;
+  width: 120%;
+  height: auto;
+  z-index: 8;
+}
+}
+
+
+@media (max-width: 400px) {
+  .about-text {
+  max-width: 80%;
+}
+/* 基本文字樣式 */
+.about-text p {
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  font-size: 1.6rem;
+}
+.soil-text3 {
+  position: absolute;
+  top: -790%;   /* 控制距離上方的位置，可微調 */
+  left: 2%;   /* 控制距離左側的位置，可微調 */
+  width: 95%;
+  padding: 1.5rem;
+  z-index: 10;
+  opacity: 0; /* 預設透明 */
+  transform: translateY(30px);
+}
+
+  /* Navbar 再縮小一點 */
+  .navbar-brand img {
+    height: 30px;
+  }
+  .navbar-toggler {
+    width: 25px;
+    height: 18px;
+    top: 12px;
+    right: 12px;
+  }
+  .navbar-toggler .bar {
+    height: 2px;
+  }
+  /* nav-list：整個區塊置中，但文字靠左 */
+.navbar-overlay .nav-list {
+  margin-top: -40px; /* 負值往上移 */
+}
+  
+  /* 漢堡展開時的字體再小一點 */
+  .navbar-overlay .nav-link,
+  .navbar-overlay .dropdown-item {
+    font-size: 1.3rem;
+  }
+
+  /* 社群 icon 區塊微調 */
+  .floating-social {
+    bottom: 10px;
+    right: 10px;
+    gap: 1px;
+  }
+  .social-icon-float {
+    font-size: 1.3rem;
+  }
+}
+@media (max-width: 380px) {
+  .soil-text3 {
+  position: absolute;
+  top: -750%;   /* 控制距離上方的位置，可微調 */
+  left: 2%;   /* 控制距離左側的位置，可微調 */
+  width: 95%;
+  padding: 1.5rem;
+  z-index: 10;
+  opacity: 0; /* 預設透明 */
+  transform: translateY(30px);
+}
+.corner-img {
+  bottom: -45%;
+  right: 3%;
+  width: 120%;
+  height: auto;
+  z-index: 8;
+}
+}  
+  
+
+
+
+    </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <img src="image/logo.png" alt="綻息 Logo" height="45" class="logo-img">
+      </a>
+      <button class="navbar-toggler" type="button">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">主題介紹</a></li>
+          <li class="nav-item"><a class="nav-link" href="今日心籤.html">今日心籤</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#song-section" id="worksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              歌曲呈現
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="worksDropdown">
+              <li><a class="dropdown-item" href="職涯發展迷茫.html">半路</a></li>
+              <li><a class="dropdown-item" href="工作忙碌.html">代辦事項</a></li>
+              <li><a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a></li>
+              <li><a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a></li>
+              <li><a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item"><a class="nav-link" href="關於我們.html">關於我們</a></li>
+        </ul>
+      </div>
+    </div>
+  
+    <div class="navbar-overlay">
+      
+    
+      <!-- ✅ 新增 nav-list 外層，讓內容可控制靠左 -->
+      <div class="nav-list">
+    
+        <div class="nav-item">
+          <a class="nav-link" href="index.html">主題介紹</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-link" href="今日心籤.html">今日心籤</a>
+        </div>
+        <!-- Dropdown: 歌曲呈現 -->
+        <div class="nav-item dropdown">
+          <div class="dropdown-header">
+            <a class="nav-link" href="#song-section">歌曲呈現</a>
+            <button class="dropdown-toggle-btn">+</button> <!-- 小加號按鈕 -->
+          </div>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="職涯發展迷茫.html">半路</a>
+            <a class="dropdown-item" href="工作忙碌.html">代辦事項</a>
+            <a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a>
+            <a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a>
+            <a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a>
+          </div>
+        </div>
+    
+        <div class="nav-item">
+          <a class="nav-link" href="關於我們.html">關於我們</a>
+        </div>
+    
+      </div>
+    </div>
+    
+    
+    
+  </nav>
+
+<!-- Hero Section (分層滑動跑馬燈) -->
+<header class="hero">
+  <div class="hero-wrapper">
+    <div class="slider-container">
+      <div class="slider">
+        <img src="image/image1.png" alt="img1" class="hero-bg">
+        <img src="image/image2.png" alt="img2" class="hero-bg">
+        <img src="image/image3.png" alt="img3" class="hero-bg">
+        <img src="image/image4.png" alt="img4" class="hero-bg">
+        <img src="image/image5.png" alt="img5" class="hero-bg">
+      </div>
+      <!-- overlay 要直接鋪滿 -->
+      <img src="image/mask-shape1.png" class="overlay" alt="Overlay">
+    </div>
+  
+    <div class="hero-content">
+      <img src="image/大logo.png" alt="綻息" class="hero-title">
+      <p class="lead hero-subtitle">為妳在壓力間留一口氣的柔光</p>
+      <a href="#works" class="btn btn-explore btn-lg mt-3">綻放片刻</a>
+    </div>
+  </div>
+</header>
+
+<!-- About Section -->
+<section id="about" class="py-5" style="background-color: #f0e9dd;">
+  <div class="about-text">
+    <!-- 第一行 -->
+    <p class="fade-in-left line1">
+      針對女性日常壓力的療癒音樂專輯
+    </p>
+    <!-- 第二行 -->
+    <p class="fade-in-right line2">
+      透過聲音、影像與觸感的多感官體驗
+    </p>
+    <!-- 第三行 -->
+    <p class="fade-in-right line3">
+      帶來片刻的平靜與安慰
+    </p>
+  </div>
+</section>
+<section class="about-section">
+  <img src="image/裝飾1-14.png" alt="裝飾底圖" class="about-bg">
+</section>
+<!-- Concept Section -->
+<section id="concept" style="background-color: #f0e9dd; padding: 100px 0; position: relative; overflow: hidden;">
+  <!-- ☁️ 背景雲朵 -->
+  <img src="image/雲朵-31.png" alt="雲朵裝飾" class="concept-cloud">
+  <div class="container d-flex flex-wrap align-items-center justify-content-center">
+
+    <!-- 左側圖片（加上 fade-item class） -->
+    <div class="concept-image fade-in-left" style="flex: 1 1 400px; text-align: center; position: relative;">
+      <div style="position: relative; display: inline-block;">
+        <img src="image/plant-hands.png" alt="成長的種子" 
+             style="width: 100%; border-radius: 50% 50% 45% 55% / 60% 40% 55% 45%; 
+                    object-fit: cover; position: relative; z-index: 2;">
+      </div>
+    </div>
+
+    <!-- 右側文字（加上 fade-item class） -->
+    <div class="concept-text fade-in-right" style="flex: 1 1 400px; padding: 10px;">
+      <h3 class="concept-title">﹝主題理念﹞</h3>
+  <p class="concept-paragraph">
+我們以種子為意象，象徵情緒與壓力都是成長的養分。<br>
+那些看似沉重的時刻，就像被埋在黑暗土壤裡的種子，雖然暫時看不見光，但正慢慢吸收著養分，等待綻放的日子到來。<br>
+<span class="small-space"></span>
+不同的情緒，會長出不同的美好，願每一次呼吸，都能讓我們更靠近柔軟而真實的自己
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="characters" class="characters-section" style="background-color: #f0e9dd; position: relative; overflow: hidden;">
+  <!-- ☁️ 背景雲朵（靠左） -->
+  <img src="image/雲朵-30.png" alt="雲朵裝飾" class="character-cloud">
+  <div class="container character-row d-flex flex-wrap align-items-center justify-content-center">
+    
+    <!-- 左側文字 -->
+    <div class="character-text fade-in-left" style="flex: 1 1 400px; padding: 10px; left: 30px;">
+      <h3 class="character-name">﹝角色介紹﹞</h3>
+      <p class="character-desc">
+小律是可愛的 chibi 女性角色，頭身分離象徵內心與行動的探索與掙扎。她像女性的縮影，面對不同階段的壓力與挑戰。<br>
+<span class="small-space"></span>
+透過造型與穿著的變化，觀眾能跟隨她的旅程，慢慢走出困住的情緒，綻放真實的自己。
+      </p>
+    </div>
+
+    <!-- 右側圖片 -->
+    <div class="character-image fade-in-right" style="flex: 1 1 500px; text-align: center;">
+      <img src="image/character1-02-02.png" alt="角色圖片" style="width: 85%; border-radius: 50% 50% 45% 55% / 60% 40% 55% 45%; 
+      object-fit: cover; position: relative; z-index: 2;">
+    </div>
+  </div>
+</section>
+
+<section id="soil-section">
+  <div class="soil-wrapper">
+  <!-- 土壤背景圖層 -->
+  <img src="image/soil-layer1.png" class="soil-layer soil-layer1" alt="">
+  <img src="image/soil-layer2.png" class="soil-layer soil-layer2" alt="">
+  <img src="image/soil-layer3.png" class="soil-layer soil-layer3" alt="">
+
+  <div class="content-wrapper">
+    <!-- 左上文字 -->
+    <div class="soil-text3">
+      <h3>﹝歌曲呈現﹞</h3>
+      <p>一起感受綻息帶來的力量......</p>
+    </div>
+  </div>
+  
+    <!-- 右下圖片容器 -->
+    <div class="image-container">
+      <!-- 主層圖片 -->
+      <picture>
+        <source srcset="image/work1-small.png" media="(max-width: 576px)">
+        <img src="image/work1.png" class="image main active">
+      </picture>
+      <picture>
+        <source srcset="image/work2-small.png" media="(max-width: 576px)">
+        <img src="image/work2.png" class="image main">
+      </picture>
+      <picture>
+        <source srcset="image/work3-small.png" media="(max-width: 576px)">
+        <img src="image/work3.png" class="image main">
+      </picture>
+      <picture>
+        <source srcset="image/work4-small.png" media="(max-width: 576px)">
+        <img src="image/work4.png" class="image main">
+      </picture>
+      <picture>
+        <source srcset="image/work3-small.png" media="(max-width: 576px)">
+        <img src="image/work3.png" class="image main">
+      </picture>
+
+      <!-- 副層圖片 -->
+      <picture>
+        <source srcset="image/work1-1-small.png" media="(max-width: 576px)">
+        <img src="image/work1-1.png" class="image sub active">
+      </picture>
+      <picture>
+        <source srcset="image/work2-1-small.png" media="(max-width: 576px)">
+        <img src="image/work2-1.png" class="image sub">
+      </picture>
+      <picture>
+        <source srcset="image/work3-1-small.png" media="(max-width: 576px)">
+        <img src="image/work3-1.png" class="image sub">
+      </picture>
+      <picture>
+        <source srcset="image/work2-1-small.png" media="(max-width: 576px)">
+        <img src="image/work2-1.png" class="image sub">
+      </picture>
+      <picture>
+        <source srcset="image/work3-1-small.png" media="(max-width: 576px)">
+        <img src="image/work3-1.png" class="image sub">
+      </picture>
+
+      <!-- 下一張按鈕 -->
+      <img src="image/button.png" id="nextBtn" class="next-btn">
+
+      <!-- 右下角附圖 -->
+      <img src="image/work1-corner.png" id="cornerImage" class="corner-img">
+    </div>
+  </div>
+   <!-- footer 疊上去 -->
+   <div class="footer-container">
+    <footer class="footer-with-bg">
+      <p class="footer-text">© 2025 綻息 Healing Music Project</p>
+    </footer>
+  </div>
+</div>
+
+
+</section>
+
+
+<!-- 懸浮社群 icon -->
+<div class="floating-social">
+  <a href="https://www.instagram.com/bloomth_.ep/?utm_source=ig_web_button_share_sheet" target="_blank" class="social-icon-float">
+    <i class="bi bi-instagram"></i>
+  </a>
+  <!-- YouTube -->
+  <a href="https://www.youtube.com/@你的頻道名稱" target="_blank" class="social-icon-float">
+    <i class="bi bi-youtube"></i>
+  </a>
+  <span class="contact-text">Contact Us</span>
+</div>
+<div class="cursor"></div>
+<canvas id="trail"></canvas>
+<div id="pageTransition"></div>
+<img id="transitionLogo" src="image/英文logo.png" alt="Logo">
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('show');
+      } else {
+        entry.target.classList.remove('show');
+      }
+    });
+  }, { threshold: 0.2 });
+  
+  document.querySelectorAll('.fade-in-left, .fade-in-right').forEach(el => {
+    observer.observe(el);
+  });
+  </script>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+  const navbar = document.querySelector('.navbar');
+  const navbarToggler = document.querySelector('.navbar-toggler');
+  const overlay = document.querySelector('.navbar-overlay');
+  const logoImg = document.querySelector('.logo-img');
+  const dropdownBtns = overlay.querySelectorAll('.dropdown-toggle-btn');
+
+  // 打開/關閉 overlay + 漢堡 + logo 顏色
+  navbarToggler.addEventListener('click', () => {
+    overlay.classList.toggle('show');
+    navbarToggler.classList.toggle('active');
+
+    if (logoImg.src.includes('logo.png')) {
+      logoImg.src = 'image/logo.png'; // 彩色 logo
+    } else {
+      logoImg.src = 'image/logo.png';  // 白色 logo
+    }
+  });
+
+  // Dropdown 展開/收合
+  dropdownBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const dropdown = btn.closest('.dropdown');
+      const menu = dropdown.querySelector('.dropdown-menu');
+      const isOpen = dropdown.classList.toggle('show');
+
+      if (isOpen) {
+        menu.style.maxHeight = menu.scrollHeight + 'px';
+        menu.style.opacity = '1';
+        menu.style.visibility = 'visible';
+        btn.textContent = '−';
+      } else {
+        menu.style.maxHeight = 0;
+        menu.style.opacity = '0';
+        menu.style.visibility = 'hidden';
+        btn.textContent = '+';
+      }
+    });
+  });
+  
+
+  // 滾動 navbar 背景 + 漢堡顏色（overlay 關閉時才有效）
+  window.addEventListener('scroll', () => {
+    if (!overlay.classList.contains('show')) {
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+        navbarToggler.classList.add('active');
+        logoImg.src = 'image/logo.png'; // 滾動時也變彩色
+      } else {
+        navbar.classList.remove('scrolled');
+        navbarToggler.classList.remove('active');
+        logoImg.src = 'image/logo.png'; // 回到白色
+      }
+    }
+  });
+});
+
+const slider = document.querySelector('.slider');
+const slides = document.querySelectorAll('.slider img');
+let index = 0;
+
+function showNextSlide() {
+  index = (index + 1) % slides.length;
+  slider.style.transform = `translateX(-${index * 100}%)`;
+}
+
+// 每 3 秒換一張
+setInterval(showNextSlide, 3000);
+
+function updateNavbarScroll() {
+  const navbar = document.querySelector('.navbar');
+  const navbarToggler = document.querySelector('.navbar-toggler');
+  const overlay = document.querySelector('.navbar-overlay');
+  const logoImg = document.querySelector('.logo-img');
+
+  if (!overlay.classList.contains('show')) {
+    if (window.scrollY > 50) {
+      navbar.classList.add('scrolled');
+      navbarToggler.classList.add('active');
+      logoImg.src = 'image/logo.png';
+    } else {
+      navbar.classList.remove('scrolled');
+      navbarToggler.classList.remove('active');
+      logoImg.src = 'image/logo.png';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', updateNavbarScroll);
+window.addEventListener('scroll', updateNavbarScroll);
+
+
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay = document.querySelector('.overlay');
+    const hero = document.querySelector('.hero');
+  
+    function scaleOverlayOnScroll() {
+      const heroRect = hero.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+  
+      let visibleRatio = 0;
+  
+      if (heroRect.bottom > 0 && heroRect.top < windowHeight) {
+        const visibleHeight = Math.min(heroRect.bottom, windowHeight) - Math.max(heroRect.top, 0);
+        visibleRatio = visibleHeight / heroRect.height;
+      }
+  
+      // hero 完全可見: scale=1，完全離開: scale=2，中間自動插值
+      const scale = 1 + (1 - visibleRatio);
+      overlay.style.transform = `scale(${scale})`;
+    }
+// 初始呼叫
+scaleOverlayOnScroll();
+
+// 滾動時更新
+window.addEventListener('scroll', scaleOverlayOnScroll);
+});
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+  const section = document.querySelector("#soil-section");
+  const layer1 = document.querySelector(".soil-layer1");
+  const layer2 = document.querySelector(".soil-layer2");
+  const layer3 = document.querySelector(".soil-layer3");
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // 每次滑到區塊依序出現
+        setTimeout(() => layer1.classList.add("visible"), 0);
+        setTimeout(() => layer2.classList.add("visible"), 200);
+        setTimeout(() => {
+          layer3.classList.add("visible");
+          document.querySelector(".soil-text3").classList.add("visible");
+        }, 600);
+      } else {
+        // 滑出畫面時移除
+        document.querySelector(".soil-text3").classList.remove("visible");
+        layer1.classList.remove("visible");
+        layer2.classList.remove("visible");
+        layer3.classList.remove("visible");
+      }
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(section);
+});
+
+
+// 當畫面滾到 soil-section 時，改變浮動圖示顏色
+const socialIcons = document.querySelector(".floating-social");
+const soilSection = document.querySelector("#soil-section");
+
+window.addEventListener("scroll", () => {
+  const soilTop = soilSection.offsetTop;
+  const soilBottom = soilTop + soilSection.offsetHeight;
+  const scrollY = window.scrollY + window.innerHeight / 2; // 取畫面中點
+  
+  if (scrollY > soilTop && scrollY < soilBottom) {
+    socialIcons.classList.add("dark");
+  } else {
+    socialIcons.classList.remove("dark");
+  }
+});
+function updateSocialColor() {
+  const soilTop = soilSection.offsetTop;
+  const soilBottom = soilTop + soilSection.offsetHeight;
+  const scrollY = window.scrollY + window.innerHeight / 2;
+
+  if (scrollY > soilTop && scrollY < soilBottom) {
+    socialIcons.classList.add("dark");
+  } else {
+    socialIcons.classList.remove("dark");
+  }
+}
+
+document.addEventListener('DOMContentLoaded', updateSocialColor);
+window.addEventListener('scroll', updateSocialColor);
+
+</script>
+<script>
+const mainImages = document.querySelectorAll('.image.main');
+const subImages = document.querySelectorAll('.image.sub');
+const nextBtn = document.getElementById('nextBtn');
+const cornerImage = document.getElementById('cornerImage');
+
+let currentIndex = 0;
+
+function updateCorner(index) {
+  cornerImage.src = `image/work${index+1}-corner.png`;
+}
+
+nextBtn.addEventListener('click', () => {
+  const currentMain = mainImages[currentIndex];
+  const currentSub = subImages[currentIndex];
+
+  const nextIndex = (currentIndex + 1) % mainImages.length;
+  const nextMain = mainImages[nextIndex];
+  const nextSub = subImages[nextIndex];
+
+  currentMain.classList.remove('active');
+  currentMain.classList.add('fade-out');
+
+  nextMain.classList.add('fade-in', 'active');
+
+  currentSub.classList.remove('active');
+  currentSub.classList.add('fade-in');
+
+  nextSub.classList.add('fade-out', 'active');
+
+  updateCorner(nextIndex);
+
+  setTimeout(() => {
+    currentMain.classList.remove('fade-out','active');
+    nextMain.classList.remove('fade-in');
+    currentSub.classList.remove('fade-in');
+    nextSub.classList.remove('fade-out');
+  },1000);
+
+  currentIndex = nextIndex;
+});
+
+  </script>
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const aboutBg = document.querySelector(".about-bg");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+  aboutBg.classList.add("active");
+} else {
+  aboutBg.classList.remove("active");
+}
+      });
+    }, { threshold: 0.3 }); // 進入 30% 畫面就觸發
+
+    observer.observe(aboutBg);
+  });
+
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // 抓出所有要觀察的雲朵
+    const clouds = document.querySelectorAll(".concept-cloud, .character-cloud");
+
+    // 建立觀察者
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active");
+        } else {
+          entry.target.classList.remove("active");
+        }
+      });
+    }, { threshold: 0.3 }); // 元素進入 30% 畫面就觸發
+
+    // 對每一朵雲啟用觀察
+    clouds.forEach(cloud => observer.observe(cloud));
+  });
+</script>
+
+<script>
+  const cursor = document.querySelector('.cursor');
+ const canvas = document.getElementById('trail');
+ const ctx = canvas.getContext('2d');
+ const transition = document.getElementById('pageTransition');
+ 
+ canvas.width = window.innerWidth;
+ canvas.height = window.innerHeight;
+ 
+ let particles = [];
+ let lastTime = 0;
+ 
+ // --- 共用產生粒子函式 ---
+ function createParticle(x, y) {
+   const now = Date.now();
+   if (now - lastTime > 40) {
+     particles.push({
+       x, y,
+       alpha: 1,
+       size: Math.random()*4 + 2,
+       dx: (Math.random()-0.5)*1.2,
+       dy: (Math.random()-0.5)*1.2,
+       color: ['rgba(255,255,255,0.9)','rgba(255,255,255,0.8)','rgba(255,255,255,0.8)'][Math.floor(Math.random()*3)]
+     });
+     lastTime = now;
+   }
+   if(particles.length>80) particles.shift();
+ }
+ 
+ // --- 光粒繪製 ---
+ function draw() {
+   ctx.clearRect(0,0,canvas.width,canvas.height);
+   particles.forEach((p,i)=>{
+     p.x += p.dx; p.y += p.dy;
+     p.alpha -= 0.012;
+     if(p.alpha <= 0) particles.splice(i,1);
+     else {
+       ctx.beginPath();
+       const fadeColor = p.color.replace(/[\d.]+\)$/g,`${p.alpha})`);
+       ctx.fillStyle = fadeColor;
+       ctx.shadowColor = fadeColor;
+       ctx.shadowBlur = 15;
+       ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+       ctx.fill();
+     }
+   });
+   requestAnimationFrame(draw);
+ }
+ draw();
+ 
+ // --- 桌機滑鼠事件 ---
+ document.addEventListener('mousemove', e => {
+   cursor.style.left = e.clientX+'px';
+   cursor.style.top = e.clientY+'px';
+   cursor.style.opacity = 1;
+   createParticle(e.clientX, e.clientY);
+ });
+ 
+ // --- 手機觸控事件 ---
+ document.addEventListener('touchstart', e => {
+  const touch = e.touches[0];
+  cursor.style.left = touch.clientX + 'px';
+  cursor.style.top = touch.clientY + 'px';
+  cursor.style.opacity = 1;
+
+  // 點按後 0.3 秒自動消失
+  setTimeout(() => {
+    cursor.style.opacity = 0;
+  }, 100);
+
+  // 可同時產生粒子效果
+  createParticle(touch.clientX, touch.clientY);
+});
+ 
+ document.addEventListener('touchmove', e=>{
+   const touch = e.touches[0];
+   cursor.style.left = touch.clientX+'px';
+   cursor.style.top = touch.clientY+'px';
+   cursor.style.opacity = 1;
+   createParticle(touch.clientX, touch.clientY);
+ });
+ 
+ document.addEventListener('touchend', ()=>{
+   cursor.style.opacity = 0;
+ });
+ 
+ document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', e => {
+    // 如果是歌曲呈現，直接 return，不做任何動作
+    if (link.getAttribute('href') === '#song-section') {
+      e.preventDefault(); // 阻止預設行為
+      return;
+    }
+
+    e.preventDefault();
+    const href = link.href;
+
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+
+    // 設定圓形圓心
+    transition.style.left = clickX + 'px';
+    transition.style.top = clickY + 'px';
+
+    // 顯示 Logo
+    const logo = document.getElementById('transitionLogo');
+    logo.style.opacity = 1;
+
+    // 擴散圓形
+    requestAnimationFrame(() => {
+      transition.style.transform = 'translate(-50%, -50%) scale(30)';
+
+      // logo 呼吸動畫
+      logo.animate([
+        { transform: 'translate(-50%, -50%) scale(1)' },
+        { transform: 'translate(-50%, -60%) scale(1.1)' },
+        { transform: 'translate(-50%, -50%) scale(1)' }
+      ], {
+        duration: 2000,
+        iterations: 3
+      });
+    });
+
+    // 動畫完成後跳頁
+    setTimeout(() => window.location.href = href, 1200);
+  });
+});
+
+ 
+ // 初始隱藏圓形與 Logo
+ window.addEventListener('load', () => {
+   transition.style.transform = 'translate(-50%, -50%) scale(0)';
+   document.getElementById('transitionLogo').style.opacity = 0;
+ });
+ 
+ 
+ </script>
+
+</html>
