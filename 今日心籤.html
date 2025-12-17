@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="icon" href="images/頭貼-53.png" type="image/png">
+  <link rel="apple-touch-icon" href="images/頭貼-53.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今日心籤</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+     /* Navbar */
+     .navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  background: transparent; /* 一開始透明 */
+  transition: background 0.3s ease;
+  /* overflow: hidden;  ← 這一行刪掉 */
+  
+}
+
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgb(255, 255, 255);
+  transition: top 0.5s ease;
+  z-index: -1; /* 在文字跟圖下面 */
+}
+
+/* 當加上 .scrolled 時，背景才滑下來 */
+.navbar.scrolled::before {
+  top: 0;
+}
+.navbar-nav {
+  display: flex;
+  gap: 24px; /* 每個 nav-item 之間間隔 24px，可調整 */
+}
+
+    /* 初始文字白色 */
+.navbar-nav .nav-link {
+  color: #ffffff !important; 
+  transition: color 0.3s;
+  font-size: 1.2rem;
+}
+.navbar-nav .nav-link:hover {
+  color: #b67b56 !important; /* 淺咖啡色 */
+  background-color: #f4efe7; /* 半透明咖啡色底框 */
+  border-radius: 25px; /* 圓角 */
+ 
+}
+/* 滾動後文字變咖啡色 */
+.navbar.scrolled .nav-link {
+  color: #b67b56 !important;
+}
+.navbar.scrolled .nav-link:hover {
+  color: #cec93e !important; /* 淺咖啡色 */
+}
+    .navbar .container {
+      padding-left: 0;
+    }
+    /* 初始把 Navbar 往上移出畫面 */
+    /* 強制調整 logo */
+.navbar-brand {
+  padding-left: 5px !important; /* 左側間距，確保大螢幕靠左一些 */
+}
+.navbar-brand img {
+  height: 45px;
+  display: block; /* 避免 inline spacing */
+  transition: all 0.3s ease;
+}
+
+.navbar {
+  transform: translateY(-100%);
+  animation: navbarSlideDown 1.2s ease-out forwards; /* 與 overlay 同步 */
+  animation-delay: 1s; /* 延遲開始，可微調 */
+}
+
+@keyframes navbarSlideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.dropdown-menu {
+  display: block;
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: hidden;
+  transition: all 0.25s ease;
+}
+/* 桌機版 dropdown 項目 hover */
+.navbar-nav .dropdown-menu .dropdown-item:hover {
+  color: #b67b56 !important;           /* 文字顏色 */
+  background-color: #f4efe7; /* 淡咖啡色背景 */
+  transition: all 0.25s ease;          /* 漸變效果 */
+}
+
+
+/* 下拉選單內英文字體 */
+.dropdown-item {
+  font-family: "HanyiSentySeaSpray", sans-serif; /* 中文預設字體 */
+}
+
+.dropdown-item span.english {
+  font-family: 'ChenYuluoyan', monospace; /* 英文改成你想要的字體 */
+}
+.navbar-overlay {
+  display: none; /* 預設隱藏 */
+}
+
+.logo-img {
+  transition: all 0.3s ease;
+}
+
+
+@media (max-width: 992px) {
+
+  /* 隱藏原 collapse（用 overlay 代替） */
+  .navbar .navbar-collapse { display: none !important; }
+  
+  /* Logo 固定左上（桌機不受影響，因為包在 media 裡） */
+  .navbar-brand {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 1001;
+  }
+  .navbar-brand img {
+    height: 40px;
+    width: auto;
+    display: block;
+  }
+
+  /* 漢堡按鈕固定右上，確保可點（z-index 高於 overlay） */
+  .navbar-toggler {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 1002;
+    background: none;
+    border: none;
+    padding: 6px;
+  }
+
+  /* Overlay */
+  .navbar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  display: none;          /* 由 JS 控制 */
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding-top: 120px;     /* 避開 logo / 漢堡 */
+  z-index: 1000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* 背景圖片設定 */
+  background-image: url('images/漢堡背景-46.png');  /* 改成你的圖片路徑 */
+  background-size: cover;       /* 讓圖片填滿 overlay */
+  background-position: center;  /* 圖片置中 */
+  background-repeat: no-repeat; /* 避免重複 */
+}
+.navbar-overlay.show {
+  display: flex;
+}
+
+  /* 叉叉按鈕固定在右上方（比漢堡更高 z）*/
+  .navbar-overlay .overlay-close {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1003;
+    line-height: 1;
+  }
+
+  /* nav-list：整個區塊置中，但文字靠左 */
+.navbar-overlay .nav-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 80%;
+  max-width: 360px;
+  box-sizing: border-box;
+}
+
+  /* 主項目漸入動畫 */
+.navbar-overlay .nav-list > .nav-item {
+  opacity: 0;
+  transform: translateY(18px);
+  margin: 10px 0;
+  transition: opacity 0.42s ease, transform 0.42s ease;
+  width: 100%;
+}
+.navbar-overlay.show .nav-list > .nav-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.navbar-overlay.show .nav-list > .nav-item:nth-child(1) { transition-delay: 0.08s; }
+.navbar-overlay.show .nav-list > .nav-item:nth-child(2) { transition-delay: 0.16s; }
+.navbar-overlay.show .nav-list > .nav-item:nth-child(3) { transition-delay: 0.24s; }
+.navbar-overlay.show .nav-list > .nav-item:nth-child(4) { transition-delay: 0.32s; }
+.navbar-overlay.show .nav-list > .nav-item:nth-child(5) { transition-delay: 0.40s; }
+.navbar-overlay.show .nav-list > .nav-item:nth-child(6) { transition-delay: 0.48s; }
+
+ /* overlay 文字樣式 */
+.navbar-overlay .nav-link,
+.navbar-overlay .dropdown-item {
+  color: #6B4C3B !important;
+  font-size: 1.5rem;
+  line-height: 2.2;
+  text-decoration: none;
+  font-family: "HanyiSentySeaSpray", sans-serif;
+  transition: color 0.25s;
+}
+/* dropdown 項目文字顏色 */
+.navbar-overlay .dropdown-item {
+  color: #b67b56 !important;  /* 統一字色 */
+  font-size: 1.5rem;
+  line-height: 2.2;
+  text-decoration: none;
+  font-family: "HanyiSentySeaSpray", sans-serif;
+  transition: all 0.25s ease;
+}
+/* dropdown 項目 hover */
+.navbar-overlay .dropdown-item:hover {
+  color: #a0633e !important;      /* 文字顏色 */
+  background-color: #f4efe7; /* 底色，可以改透明度 */
+ border-radius: 20px;
+  transition: all 0.1s ease;      /* 漸變效果 */
+}
+
+  /* dropdown header：文字 + 加號同一行 */
+.navbar-overlay .dropdown .dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+  .navbar-overlay .dropdown .dropdown-header .nav-link {
+    display: inline-block;
+  }
+  .navbar-overlay .dropdown .dropdown-toggle-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #6B4C3B;
+  padding: 6px 8px;
+}
+
+ /* dropdown-menu 動畫 */
+.navbar-overlay .dropdown-menu {
+  display: block;
+  position: relative;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  padding-left: 20px;
+  margin-top: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+}
+.navbar-overlay .dropdown.show .dropdown-menu {
+  max-height: 600px;
+  opacity: 1;
+  visibility: visible;
+  margin-top: 8px;
+}
+
+.navbar-overlay .dropdown-menu .dropdown-item {
+  padding: 8px 0;
+  font-size: 1.2rem;
+}
+.navbar-overlay .dropdown-item span.english {
+  font-family: 'ChenYuluoyan', monospace;
+}
+  
+.navbar::before {
+  content: "";
+  position: absolute;
+  top: -100%;      /* 初始完全隱藏 */
+  left: 0;
+  width: 100%;
+  height: 100%;    
+  background: rgb(255, 255, 255);
+  transition: top 0.5s ease;
+  z-index: -1;
+}
+.navbar.scrolled::before {
+  top: 0%;          
+  height: 500%;    /* 可調整比 navbar 高一點 */
+}
+/* 漢堡按鈕 */
+.navbar-toggler {
+  position: fixed;
+  top: 20px;
+  right: 18px;
+  z-index: 1002;
+  width: 30px;
+  height: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* 三條線 */
+.navbar-toggler .bar {
+  height: 3px;
+  width: 100%;
+  background-color: #fff; /* 初始白色 */
+  border-radius: 2px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* 滾動或 overlay 開啟後變粉色 */
+.navbar-toggler.active .bar {
+  background-color: #d8a787;
+}
+}
+
+/* 手機尺寸 (max-width: 600px) */
+@media (max-width: 600px) {
+
+ /* 🔸 強制漢堡按鈕大小 */
+ .navbar-toggler {
+    width: 20px !important;   /* 強制縮小 */
+    height: 20px !important;
+    padding: 0 !important;    /* 移除 Bootstrap 預設 padding */
+    top: 30px !important;
+    right: 25px !important;
+  }
+.navbar-toggler .bar {
+  height: 2px;  /* 線條稍細 */
+}
+
+/* 🔸 Logo 縮小一點 */
+.navbar-brand img {
+  height: 35px;
+}
+
+/* 🔸 文字大小調整（overlay 裡） */
+.navbar-overlay .nav-link,
+.navbar-overlay .dropdown-item {
+  font-size: 1.3rem;  /* 比原本 1.5rem 小一點 */
+  line-height: 2;
+}
+
+/* 🔸 dropdown 裡更小字體 */
+.navbar-overlay .dropdown-menu .dropdown-item {
+  font-size: 1.1rem;
+}
+
+/* 🔸 增加點距離避免擁擠 */
+.navbar-overlay .nav-list {
+  width: 85%;
+  max-width: 320px;
+}
+}
+@media (max-width: 400px) {
+  /* Navbar 再縮小一點 */
+  .navbar-brand img {
+    height: 30px;
+  }
+  .navbar-toggler {
+    width: 25px;
+    height: 18px;
+    top: 12px;
+    right: 12px;
+  }
+  .navbar-toggler .bar {
+    height: 2px;
+  }
+  /* nav-list：整個區塊置中，但文字靠左 */
+.navbar-overlay .nav-list {
+  margin-top: -40px; /* 負值往上移 */
+}
+  
+  /* 漢堡展開時的字體再小一點 */
+  .navbar-overlay .nav-link,
+  .navbar-overlay .dropdown-item {
+    font-size: 1.3rem;
+  }
+  
+}
+    body {
+      margin: 0;
+      font-family: "HanyiSentySeaSpray", sans-serif;
+      background-color:  #f0e9dd;
+      overflow-x: hidden;
+      cursor: none;
+    }
+/* 主游標保持原本樣子 */
+.cursor {
+  width: 35px;
+  height: 35px;
+  background: rgba(250, 178, 146, 1);
+  border-radius: 50%;
+  position: fixed;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  transition: opacity 0.3s ease, transform 0.15s ease-out;
+  animation: cursor-breathe 3s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes cursor-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.1); }
+}
+@media (max-width: 600px){
+  .cursor {
+  width: 25px;
+  height: 25px;
+  }
+}
+/* 光粒畫布 */
+#trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998;
+}
+
+#pageTransition {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  background: rgba(216, 167, 135, 1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 1000;
+  pointer-events: none;
+  transition: transform 1s ease-out;
+}
+
+#transitionLogo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 150px;
+  height: auto;
+  transform: translate(-50%, -50%) scale(1);
+  z-index: 1001;
+  opacity: 0; /* 初始隱藏 */
+  transition: opacity 0.2s ease;
+}
+
+    /* 整個頁面滾輪 */
+body::-webkit-scrollbar {
+  width: 12px;              /* 滾輪寬度 */
+}
+
+body::-webkit-scrollbar-track {
+  background: #f0f0f0;      /* 滾軌背景 */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #d8a787; /* 滾塊顏色 */
+  border-radius: 10px;        /* 圓角 */
+  border: 3px solid #f0f0f0; /* 讓滾塊周圍有空間 */
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background-color: #dcd783; /* 滾塊滑過顏色 */
+}
+    /* 引入 ChenYuluoyan-2.0-Thin 字體 */
+@font-face {
+  font-family: 'ChenYuluoyan';
+  src: url('ChenYuluoyan-Thin-Monospaced.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+    /* 圖1區塊 */
+    .top-image {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      overflow: visible;
+      animation: slideDown 1.0s ease-out;
+      z-index: 0;
+    }
+   
+    .top-image img {
+  width: 100%;
+  height: 120%; /* 高度比容器高一點 */
+  object-fit: cover;
+  transform: translateY(-20px); /* 初始偏移 */
+  transition: transform 0.3s linear;
+  animation: moveDown 1s ease-out; /* 套用進場動畫（可選） */
+}
+
+@keyframes moveDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+    /* 圖2與文字區塊 */
+.content {
+  position: relative;
+  top: 0vh; /* 從圖1下方開始 */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 2;
+  animation: contentSlide 1s ease-out forwards;
+  animation-fill-mode: forwards;
+  margin-top: -35vh; /* 直接拉起來 */
+}
+
+/* 滑入動畫 */
+@keyframes contentSlide {
+  0% {
+    transform: translateY(50px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+ /* 靜態圖片 */
+.after-content {
+  position: absolute; /* ❗絕對定位，獨立不影響其他元素 */
+  top: 38vh; /* 從圖1下方開始 */
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 2;
+
+}
+
+.after-content img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+ 
+
+ /* 文字區塊 */
+ .text-block {
+      position: absolute;
+      top: 25%;
+      left: 35%;
+      transform: translateX(-50%);
+      color: #7d5f4f;
+      width: 80%;
+      max-width: 800px;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.6); /* 讓文字在亮背景上可讀 */
+      margin-bottom: 0;
+    }
+    .text-block h1 {
+      font-size: 2.2rem;
+      font-weight: 600; /* 或 bold */
+      margin-bottom: 0.5em;
+      text-align: left;
+      
+    }
+
+
+
+    .text-block p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #7d5f4f;
+      text-align: left;
+      font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
+      letter-spacing: 3px;
+    }
+  
+  
+
+
+/* 懸浮社群 icon 區塊 */
+.floating-social {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px; /* ⬅️ 原本是 10px，改成更緊密 */
+  z-index: 1000;
+}
+
+/* 各個 icon */
+.social-icon-float {
+  font-size: 1.8rem;
+  color: #d8a787;
+  text-decoration: none;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.social-icon-float:hover {
+  color: #b67b56;
+  transform: scale(1.15);
+}
+/* 滾動到 soil-section 時變色 */
+.floating-social.dark {
+  color: #6b4c3b;
+}
+
+.floating-social.dark .social-icon-float {
+  color: #6b4c3b;
+}
+
+.floating-social.dark .social-icon-float:hover {
+  color: #a07556;
+}
+
+.floating-social.dark .contact-text {
+  color: #6b4c3b;
+}
+
+.floating-social.dark .contact-text:hover {
+  color: #a07556;
+}
+/* Contact Us 文字 */
+.contact-text {
+  font-size: 1.5rem;
+  color: #d8a787;
+  font-weight: 600;
+  letter-spacing: 0px;
+  text-align: right;
+  transition: color 0.3s ease;
+  font-family: 'ChenYuluoyan', monospace; 
+}
+
+.contact-text:hover {
+  color: #b67b56;
+}
+
+.top-image-wrapper {
+  text-align: center; /* 文字和按鈕置中 */
+  margin-top: 10px;
+}
+.top-image-caption-wrapper {
+  position: relative;
+  margin-top: -5%; /* 控制與上方的距離 */
+  text-align: center;
+  z-index: 3;
+  
+}
+.top-image-caption {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 35px;
+  color: #6b4c3b;
+}
+
+.caption-button {
+  width: 85px!important;   /* 按鈕大小，可自行調整 */
+  height: auto;
+  cursor: pointer; /* 滑鼠變手型 */
+  transition: transform 0.2s;
+  z-index: 5; /* 讓它浮上來 */
+}
+
+.caption-button:hover {
+  transform: scale(1.1); /* 滑鼠經過有放大效果 */
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 一排 4 張 */
+  gap: 30px; /* 圖片間距 */
+  margin-top: 5%;
+  margin-bottom: 50px;
+  max-width: 1000px; /* 限制整個區塊最大寬度，可自行調整 */
+  margin-left: auto;
+  margin-right: auto; /* 置中 */
+}
+
+.image-grid img {
+  width: 100%;       /* 每格寬度填滿格子 */
+  height: auto;     /* 固定高度，避免太大 */
+  object-fit: cover; /* 保持比例填滿格子 */
+  border-radius: 8px; /* 圓角，可選 */
+  transition: transform 0.2s;
+  z-index: 1;
+}
+
+.image-grid img:hover {
+  transform: scale(1.05);
+}
+
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #f0e9dd00;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.lightbox-content {
+  position: relative; /* 讓 close 跟 go-page-button 以它為基準 */
+  width: 70%;
+}
+
+.lightbox-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(105, 80, 72, 0.297);
+}
+
+/* 關閉按鈕：在圖片右上角 */
+.close {
+  position: absolute;
+  top: 12px;
+  right: 30px;
+  font-size: 45px;
+  color: #7d5f4f;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+.close:hover {
+  transform: scale(1.2);
+}
+
+/* 跳頁按鈕：在圖片右下角 */
+.go-page-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 10%;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s ease;
+}
+.go-page-button:hover {
+  transform: scale(1.1);
+}
+
+
+.image-grid,
+.content,
+.top-image {
+  overflow: visible;
+}
+
+/* 讓頁面結構可支撐 footer 貼底 */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 主內容撐開空間（確保 footer 貼在底部） */
+main {
+  flex: 1;
+}
+
+/* Footer 外層容器 */
+.footer-container {
+  position: relative;
+  width: 100%;
+  bottom: 0;
+}
+
+/* Footer 本體 */
+.footer-with-bg {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  background-image: url('images/footer-49.png');
+  background-size: cover;
+  background-position: center bottom; /* 讓背景圖底部對齊 */
+  background-repeat: no-repeat;
+}
+
+.footer-with-bg .footer-text {
+  color: white;
+  text-align: center;
+  font-size: clamp(14px, 2vw, 20px); /* 文字隨螢幕縮放 */
+  padding: 0 10px;
+  margin-top: 2%;
+}
+
+/* 底部裝飾容器 */
+.bottom-decor {
+  position: absolute;
+  bottom: 0; /* 貼齊 footer 底部 */
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  height: 800px; /* 👈 給底圖動畫空間（可依實際高度微調） */
+  overflow: hidden;
+}
+
+/* 裝飾圖片 */
+.bottom-decor-img {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%)translateY(80px);
+  width: 100vw;
+  height: auto;
+  opacity: 0.7;
+  z-index: 0;
+  transition: transform 1s ease-out, opacity 1s ease-out;
+}
+
+/* 動畫狀態 */
+.bottom-decor-img.decor1.active { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+.bottom-decor-img.decor2.active { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+.bottom-decor-img.decor3.active { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+@media (max-width: 1400px) and (orientation: landscape) {
+  /* 圖1區塊 */
+  .top-image {
+    height: 65vh; /* 視窗稍微縮小時減少高度 */
+  }
+
+  .top-image img {
+    height: 115%;
+    transform: translateY(-10px); /* 減少偏移 */
+  }
+
+  /* 圖2與文字區塊 */
+  .content {
+    margin-top: -28vh; /* 原本 -35vh 太高，畫面會被拉開 */
+    width: 101%;
+    left: -1%;
+    overflow: hidden; /* 避免超出畫面 */
+  }
+
+  /* 靜態圖片 */
+  .after-content {
+    top: 43vh;
+    
+  }
+  
+  /* 文字區塊 */
+  .text-block {
+    top: 25%; /* 稍微上移讓比例更自然 */
+    left: 35%; /* 調整橫向位置 */
+    max-width: 700px; /* 控制寬度避免過寬 */
+  }
+
+  .text-block h1 {
+    font-size: 2.5rem;
+      margin-bottom: 0.3em;
+      text-align: left;
+  }
+
+  .text-block p {
+    font-size: 1.2rem;
+      line-height: 1.6;
+      letter-spacing: 2px;
+  }
+   /* 頂部圖與說明 */
+   .top-image-wrapper {
+    margin-top: 5px; /* 減少頂部空白 */
+  }
+
+  .top-image-caption-wrapper {
+    margin-top: -8%;
+  }
+
+  .top-image-caption {
+    font-size: 30px; /* 原本 35px 太大 */
+    gap: 10px;
+  }
+
+  .caption-button {
+    width: 80px ; /* 按鈕縮小一點 */
+  }
+
+  /* 縮圖格線 */
+  .image-grid {
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 24px;
+    max-width: 850px;
+    margin-top: 4%;
+    margin-bottom: 40px;
+  }
+
+  .image-grid img {
+    border-radius: 10px;
+  }
+
+  /* Lightbox */
+  .lightbox-content {
+    width: 80%;
+  }
+
+  .close {
+    font-size: 38px;
+    right: 25px;
+  }
+
+  .go-page-button {
+    width: 12%;
+    bottom: 20px;
+    right: 20px;
+  }
+
+
+  /* 底部裝飾圖 */
+  .bottom-decor {
+    height: 650px; /* 減少高度避免佔滿畫面 */
+  }
+
+  .bottom-decor-img {
+    transform: translateX(-50%) translateY(50px);
+    opacity: 0.6;
+  }
+}
+@media (max-width: 1280px) and (orientation: landscape) {
+/* 靜態圖片 */
+.after-content {
+    top: 45vh;
+  }
+}
+@media (max-width: 1024px) and (orientation: landscape) {
+  .top-image {
+    height: 60vh; /* 視窗稍微縮小時減少高度 */
+  }
+
+  .top-image img {
+    height: 100%;
+    transform: translateY(-10px); /* 減少偏移 */
+  }
+
+  /* 圖2與文字區塊 */
+  .content {
+    margin-top: -28vh; /* 原本 -35vh 太高，畫面會被拉開 */
+    width: 101%;
+    left: -1%;
+    overflow: hidden; /* 避免超出畫面 */
+    height: 50vh;
+  }
+
+  /* 靜態圖片 */
+  .after-content {
+    top: 45vh;
+    
+  }
+  .text-block {
+      top: 38%;
+      left: 51%;
+      width: 90%;
+      max-width: 90%;
+    }
+    .text-block h1 {
+      font-size: 2.2rem;
+      margin-bottom: 0.3em;
+      text-align: left;
+    }
+    .text-block p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      letter-spacing: 2px;
+    }  
+     /* 頂部圖與說明 */
+   .top-image-wrapper {
+    margin-top: 5px; /* 減少頂部空白 */
+  }
+
+  .top-image-caption-wrapper {
+    margin-top: 5%;
+  }
+
+  .top-image-caption {
+    font-size: 26px; /* 原本 35px 太大 */
+    gap: 10px;
+  }
+  .caption-button {
+    width: 75px !important; /* 按鈕縮小一點 */
+  }
+}
+@media (max-width: 1024px) and (orientation: portrait) {
+  .top-image {
+    height: 50vh;
+  }
+
+  .top-image img {
+    height: 100%;
+    transform: translateY(-10px); /* 減少偏移 */
+  }
+
+  /* 圖2與文字區塊 */
+  .content {
+    margin-top: -15vh; /* 避免內容蓋住影片 */
+    width: 101%;
+    top: -5vh;
+    left: -1%;
+    overflow: hidden; /* 避免超出畫面 */
+    height: 30vh;
+  }
+  .after-content {
+    top: 35vh;           /* 調整 top，高度會生效 */
+  }
+  .after-content img {
+    width: 100%;
+    height: 30vh;      /* 高度拉長，產生拉伸感 */
+    object-fit: cover; /* 填滿容器 */
+    display: block;
+    margin: 0 auto;
+  }
+  .text-block {
+      top: 35%;
+      left: 51%;
+      width: 90%;
+      max-width: 90%;
+    }
+    .text-block h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.3em;
+      text-align: left;
+    }
+    .text-block p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      letter-spacing: 2px;
+    }  
+     /* 頂部圖與說明 */
+   .top-image-wrapper {
+    margin-top: 5px; /* 減少頂部空白 */
+  }
+
+  .top-image-caption-wrapper {
+    margin-top: -5%;
+  }
+
+  .top-image-caption {
+    font-size: 30px; /* 原本 35px 太大 */
+    gap: 10px;
+  }
+  .caption-button {
+    width: 75px !important; /* 按鈕縮小一點 */
+  }
+  /* 縮圖格線 */
+  .image-grid {
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 24px;
+    max-width: 850px;
+    margin-top: 6%;
+    margin-bottom: 6%;
+  }
+/* 底部裝飾圖 */
+.bottom-decor {
+    height: 750px; /* 減少高度避免佔滿畫面 */
+  }
+
+  .bottom-decor-img {
+    width: 100vw;
+  height: 100%; /* 原本 auto，改成大於容器高度 */
+    transform: translateX(-50%) translateY(60px);
+    opacity: 0.6;
+  }
+  /* Lightbox */
+  .lightbox-content {
+    width: 80%;
+  }
+  .go-page-button {
+    width: 15%;
+    bottom: 25px;
+    right: 25px;
+  }
+}
+@media (max-width: 992px) and (orientation: portrait){
+  .top-image {
+    height: 45vh;
+  }
+  /* 圖2與文字區塊 */
+  .content {
+    margin-top: -15vh; /* 避免內容蓋住影片 */
+    width: 101%;
+    top: -5vh;
+    left: -1%;
+    overflow: hidden; /* 避免超出畫面 */
+    height: 25vh;
+  }
+  .after-content {
+    top: 35vh;           /* 調整 top，高度會生效 */
+  }
+  .after-content img {
+    width: 100%;
+    height: 20vh;      /* 高度拉長，產生拉伸感 */
+  }
+  .text-block {
+      top: 42%;
+      left: 52%;
+      width: 90%;
+      max-width: 90%;
+    }
+  .text-block h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5em;
+      text-align: left;
+    }
+    .text-block p {
+      font-size: 1.0rem;
+      line-height: 1.6;
+      letter-spacing: 3px;
+    }
+         /* 頂部圖與說明 */
+   .top-image-wrapper {
+    margin-top: 5px; /* 減少頂部空白 */
+  }
+
+  .top-image-caption-wrapper {
+    margin-top: -2%;
+  }
+
+  .top-image-caption {
+    font-size: 25px; /* 原本 35px 太大 */
+    gap: 10px;
+  }
+  .caption-button {
+    width: 70px !important; /* 按鈕縮小一點 */
+  }
+  /* 縮圖格線 */
+  .image-grid {
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 24px;
+    max-width: 85%;
+    margin-top: 6%;
+    margin-bottom: 6%;
+  }
+  /* 底部裝飾圖 */
+.bottom-decor {
+    height: 600px; /* 減少高度避免佔滿畫面 */
+  }
+
+  .bottom-decor-img {
+    width: 100vw;
+  height: 100%; /* 原本 auto，改成大於容器高度 */
+    transform: translateX(-50%) translateY(60px);
+    opacity: 0.6;
+  }
+  /* Lightbox */
+  .lightbox-content {
+    width: 80%;
+  }
+  .go-page-button {
+    width: 15%;
+    bottom: 25px;
+    right: 25px;
+  }
+}
+@media (max-width: 780px) {
+  /* 圖2與文字區塊 */
+  .content {
+    margin-top: -18vh; /* 避免內容蓋住影片 */
+    width: 101%;
+    top: -5vh;
+    left: -1%;
+    overflow: hidden; /* 避免超出畫面 */
+    height: 28vh;
+  }
+  .after-content {
+    top: 35vh;           /* 調整 top，高度會生效 */
+  }
+  .after-content img {
+    width: 100%;
+    height: 20vh;      /* 高度拉長，產生拉伸感 */
+  }
+}
+@media (max-width: 600px) {
+  .top-image {
+    height: 37vh;
+  }
+  /* 圖2與文字區塊 */
+  .content {
+    margin-top: -15vh; /* 避免內容蓋住影片 */
+    width: 105%;
+    top: -7vh;
+    left: -5%;
+    overflow: hidden; /* 避免超出畫面 */
+    height: 35vh;
+  }
+  .after-content {
+    top: 22vh;           /* 調整 top，高度會生效 */
+  }
+  .after-content img {
+    width: 100%;
+    height: 40vh;      /* 高度拉長，產生拉伸感 */
+  }
+  .text-block {
+      top: 42%;
+      left: 54%;
+      width: 90%;
+      max-width: 90%;
+    }
+  .text-block h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5em;
+    text-align: left;
+    }
+    .text-block p {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    letter-spacing: 1.5px;
+  }
+    /* 頂部圖與說明 */
+    .top-image-wrapper {
+    margin-top: 5px; /* 減少頂部空白 */
+  }
+
+  .top-image-caption-wrapper {
+    margin-top: -2%;
+  }
+
+  .top-image-caption {
+    font-size: 20px; /* 原本 35px 太大 */
+    gap: 10px;
+  }
+  .caption-button {
+    width: 65px !important; /* 按鈕縮小一點 */
+  }
+  /* 縮圖格線 */
+  .image-grid {
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 15px;
+    max-width: 90%;
+    margin-top: 6%;
+    margin-bottom: 6%;
+  }
+  /* 底部裝飾圖 */
+.bottom-decor {
+    height: 450px; /* 減少高度避免佔滿畫面 */
+  }
+
+  .bottom-decor-img {
+    width: 100vw;
+  height: 100%; /* 原本 auto，改成大於容器高度 */
+    transform: translateX(-50%) translateY(60px);
+    opacity: 0.6;
+  }
+  /* Lightbox */
+  .lightbox-content {
+    width: 90%;
+  }
+  .go-page-button {
+    width: 18%;
+    bottom: 22px;
+    right: 22px;
+  }
+  /* 懸浮社群 icon 區塊 */
+  .floating-social {
+  bottom: 15px;
+  right: 15px;
+  gap: 2px; /* ⬅️ 原本是 10px，改成更緊密 */
+}
+/* 各個 icon */
+.social-icon-float {
+  font-size: 1.5rem;
+}
+/* Contact Us 文字 */
+.contact-text {
+  font-size: 1.1rem;
+  color: #d8a787;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-align: right;
+  transition: color 0.3s ease;
+}
+}
+@media (max-width: 450px) {
+  .text-block {
+      top: 42%;
+      left: 52%;
+      width: 80%;
+      max-width: 80%;
+    }
+  .text-block h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5em;
+    text-align: left;
+    }
+    .text-block p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    letter-spacing: 1px;
+  }
+  .text-block br {
+    display: none; /* 隱藏 <br> */
+  }
+    /* 頂部圖與說明 */
+    .top-image-wrapper {
+    margin-top: 5px; /* 減少頂部空白 */
+  }
+
+  .top-image-caption-wrapper {
+    margin-top: -10%;
+  }
+
+  .top-image-caption {
+    font-size: 19px; /* 原本 35px 太大 */
+    gap: 8px;
+  }
+  .caption-button {
+    width: 60px !important; /* 按鈕縮小一點 */
+  }
+  /* 縮圖格線 */
+  .image-grid {
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px;
+    max-width: 80%;
+    margin-top: 10%;
+    margin-bottom: 8%;
+  }
+    /* 底部裝飾圖 */
+.bottom-decor {
+    height: 700px; /* 減少高度避免佔滿畫面 */
+  }
+
+  .bottom-decor-img {
+    width: 100vw;
+  height: 100%; /* 原本 auto，改成大於容器高度 */
+    transform: translateX(-50%) translateY(60px);
+    opacity: 0.6;
+  }
+  /* Lightbox */
+  .lightbox-content {
+    width: 90%;
+  }
+  .go-page-button {
+    width: 18%;
+    bottom: 22px;
+    right: 22px;
+  }
+}
+@media (max-width: 400px) {
+  /* 影片區更緊湊 */
+  .top-image {
+    height: 38vh;
+  }
+  /* 圖2與文字區塊 */
+  .content {
+    margin-top: -15vh; /* 避免內容蓋住影片 */
+    width: 105%;
+    top: -7vh;
+    left: -5%;
+    overflow: hidden; /* 避免超出畫面 */
+    height: 40vh;
+  }
+  .after-content {
+    top: 28vh;
+  }
+  .after-content img {
+    width: 100%;
+    height: 40vh;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+  }
+  .text-block {
+      top: 38%;
+      left: 52%;
+      width: 85%;
+      max-width: 85%;
+    }
+  /* 文字區塊縮小 */
+  .text-block h1 {
+    position: relative;
+    top: 5px;
+    font-size: 1.6rem;
+  }
+  .text-block p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+    /* 頂部圖與說明 */
+    .top-image-wrapper {
+    margin-top: 5px; /* 減少頂部空白 */
+  }
+  .top-image-caption-wrapper {
+    margin-top: -5%;
+  }
+  .top-image-caption {
+    font-size: 18px; /* 原本 35px 太大 */
+    gap: 5px;
+  }
+  .caption-button {
+    width: 55px !important; /* 按鈕縮小一點 */
+  }
+
+  /* Lightbox */
+  .lightbox-content {
+    width: 80%;
+  }
+  .go-page-button {
+    width: 25%;
+    bottom: 15px;
+    right: 15px;
+  }
+  .close {
+    font-size: 38px;
+    right: 15px;
+    top: 2px; 
+  }
+  /* 社群 icon 區塊微調 */
+  .floating-social {
+    bottom: 10px;
+    right: 10px;
+    gap: 1px;
+  }
+  .social-icon-float {
+    font-size: 1.3rem;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="綻息.html">
+        <img src="images/logo1.png" alt="綻息 Logo" height="45" class="logo-img">
+      </a>
+      <button class="navbar-toggler" type="button">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="綻息.html">主題介紹</a></li>
+          <li class="nav-item"><a class="nav-link" href="今日心籤.html">今日心籤</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#song-section" id="worksDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              歌曲呈現
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="worksDropdown">
+              <li><a class="dropdown-item" href="職涯發展迷茫.html">半路</a></li>
+              <li><a class="dropdown-item" href="工作忙碌.html">代辦事項</a></li>
+              <li><a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a></li>
+              <li><a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a></li>
+              <li><a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item"><a class="nav-link" href="關於我們.html">關於我們</a></li>
+        </ul>
+      </div>
+    </div>
+  
+    <div class="navbar-overlay">
+      
+    
+      <!-- ✅ 新增 nav-list 外層，讓內容可控制靠左 -->
+      <div class="nav-list">
+    
+        <div class="nav-item">
+          <a class="nav-link" href="綻息.html">主題介紹</a>
+        </div>
+        <div class="nav-item">
+          <a class="nav-link" href="今日心籤.html">今日心籤</a>
+        </div>
+        <!-- Dropdown: 歌曲呈現 -->
+        <div class="nav-item dropdown">
+          <div class="dropdown-header">
+            <a class="nav-link" href="#song-section">歌曲呈現</a>
+            <button class="dropdown-toggle-btn">+</button> <!-- 小加號按鈕 -->
+          </div>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="職涯發展迷茫.html">半路</a>
+            <a class="dropdown-item" href="工作忙碌.html">代辦事項</a>
+            <a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a>
+            <a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a>
+            <a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a>
+          </div>
+        </div>
+    
+        <div class="nav-item">
+          <a class="nav-link" href="關於我們.html">關於我們</a>
+        </div>
+  
+      </div>
+    </div>
+   
+    
+  </nav>
+  <main>
+<div class="top-image">
+  <img src="images/聽畫卡.jpg" alt="聽畫卡" />
+</div>
+
+<div class="content">
+  <img src="images/box6-32.png" alt="前景圖2">
+  <div class="text-block">
+    <h1>今日心籤</h1>
+    <p>
+      「在忙碌的日子裡，不知道聽什麼歌嗎？<br>
+      從一張圖像開始，背面藏著一句療癒金句和一首專屬推薦曲，<br>
+      讓〈綻息〉陪你慢下來，聽見自己的呼吸。」
+    </p>
+  </div>
+  
+</div>
+<div class="top-image-caption-wrapper">
+  <div class="top-image-caption">
+    <span>從下圖選一張今天最符合你的畫</span>
+    <img src="images/想用抽的-33.png" alt="按鈕" class="caption-button" />
+  </div>
+</div>
+
+<div class="after-content">
+  <img src="images/box6-1-32.png" alt="">
+</div>
+<!-- 八張圖片區塊 -->
+<div class="image-grid" id="imageGrid">
+  <!-- 8 張隨機圖片會自動生成在這裡 -->
+</div>
+
+<!-- 燈箱效果 -->
+<div id="lightbox" class="lightbox">
+  <div class="lightbox-content">
+    <span class="close">&times;</span>
+    <img class="lightbox-img" src="" alt="大圖">
+    <img src="images/跳頁按鈕-35.png" alt="前往頁面" class="go-page-button">
+  </div>
+</div>
+
+
+<!-- 懸浮社群 icon -->
+<div class="floating-social">
+  <a href="https://www.instagram.com/bloomth_.ep/?utm_source=ig_web_button_share_sheet" target="_blank" class="social-icon-float">
+    <i class="bi bi-instagram"></i>
+  </a>
+  <!-- YouTube -->
+  <a href="https://www.youtube.com/@你的頻道名稱" target="_blank" class="social-icon-float">
+    <i class="bi bi-youtube"></i>
+  </a>
+  <span class="contact-text">Contact Us</span>
+</div>
+</main>
+<div class="footer-container">
+  <footer class="footer-with-bg text-center">
+    <p class="footer-text">© 2025 綻息 Healing Music Project</p>
+  </footer>
+
+  <!-- 頁面底部裝飾 -->
+  <div class="bottom-decor">
+    <img src="images/今日心籤_bg1-34.png" alt="" class="bottom-decor-img decor1">
+    <img src="images/今日心籤_bg2-34.png" alt="" class="bottom-decor-img decor2">
+    <img src="images/今日心籤_bg3-34.png" alt="" class="bottom-decor-img decor3">
+  </div>
+</div>
+
+<div class="cursor"></div>
+<canvas id="trail"></canvas>
+<div id="pageTransition"></div>
+<img id="transitionLogo" src="images/英文logo.png" alt="Logo">
+
+</body>
+<script>
+  window.addEventListener("scroll", function() {
+    const navbar = document.querySelector(".navbar");
+    if (window.scrollY > 50) { // 捲動超過 50px
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
+    }
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const navbar = document.querySelector('.navbar');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    const overlay = document.querySelector('.navbar-overlay');
+    const logoImg = document.querySelector('.logo-img');
+    const dropdownBtns = overlay.querySelectorAll('.dropdown-toggle-btn');
+  
+    // 打開/關閉 overlay + 漢堡 + logo 顏色
+    navbarToggler.addEventListener('click', () => {
+      overlay.classList.toggle('show');
+      navbarToggler.classList.toggle('active');
+  
+      if (logoImg.src.includes('logo.png')) {
+        logoImg.src = 'images/logo1.png'; // 彩色 logo
+      } else {
+        logoImg.src = 'images/logo.png';  // 白色 logo
+      }
+    });
+  
+    // Dropdown 展開/收合
+    dropdownBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const dropdown = btn.closest('.dropdown');
+        const menu = dropdown.querySelector('.dropdown-menu');
+        const isOpen = dropdown.classList.toggle('show');
+  
+        if (isOpen) {
+          menu.style.maxHeight = menu.scrollHeight + 'px';
+          menu.style.opacity = '1';
+          menu.style.visibility = 'visible';
+          btn.textContent = '−';
+        } else {
+          menu.style.maxHeight = 0;
+          menu.style.opacity = '0';
+          menu.style.visibility = 'hidden';
+          btn.textContent = '+';
+        }
+      });
+    });
+  
+    // 滾動 navbar 背景 + 漢堡顏色（overlay 關閉時才有效）
+    window.addEventListener('scroll', () => {
+      if (!overlay.classList.contains('show')) {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+          navbarToggler.classList.add('active');
+          logoImg.src = 'images/logo.png'; // 滾動時也變彩色
+        } else {
+          navbar.classList.remove('scrolled');
+          navbarToggler.classList.remove('active');
+          logoImg.src = 'images/logo1.png'; // 回到白色
+        }
+      }
+    });
+  });
+  
+  </script>
+<script>
+  
+const topImage = document.querySelector('.top-image img'); // 改成 img
+const moveSpeed = 0.3; // 視差速度
+const initialOffset = -20; // 初始偏移量
+const maxUpOffset = -50; // 最大向上偏移量（自己設定）
+
+// 初始化 transform
+topImage.style.transform = `translateY(${initialOffset}px)`;
+
+// 載入動畫（淡入 + 下滑）
+topImage.style.transition = 'transform 1.5s ease-out, opacity 1.5s ease-out';
+topImage.style.opacity = '0';
+requestAnimationFrame(() => {
+  topImage.style.transform = `translateY(0px)`;
+  topImage.style.opacity = '1';
+});
+
+// 滑動視差
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  
+  // 計算新的偏移量
+  let newOffset = initialOffset - scrollY * moveSpeed;
+  
+  // 限制最大向上偏移
+  if (newOffset < maxUpOffset) newOffset = maxUpOffset;
+
+  topImage.style.transform = `translateY(${newOffset}px)`;
+});
+
+
+// 原始資料
+const imagePairs = [
+  { thumb: 'images/今日心籤/小小的光點.png', large: 'images/療癒金句/小小的光點.png', page: '自我價值低落.html' },
+  { thumb: 'images/今日心籤/小事會等的.png', large: 'images/療癒金句/小事會等的.png', page: '家務壓力.html' },
+  { thumb: 'images/今日心籤/小草的微聲.png', large: 'images/療癒金句/小草的微聲.png', page: '家務壓力.html' },
+  { thumb: 'images/今日心籤/小鹿還在想.png', large: 'images/療癒金句/小鹿還在想.png', page: '職涯發展迷茫.html' },
+  { thumb: 'images/今日心籤/五分鐘的雲.png', large: 'images/療癒金句/五分鐘的雲.png', page: '工作忙碌.html' },
+  { thumb: 'images/今日心籤/秒針之外的時間.png', large: 'images/療癒金句/秒針之外的時間.png', page: '工作忙碌.html' },
+  { thumb: 'images/今日心籤/桌邊的小宇宙.png', large: 'images/療癒金句/桌邊的小宇宙.png', page: '工作忙碌.html' },
+  { thumb: 'images/今日心籤/茶香留住我.png', large: 'images/療癒金句/茶香留住我.png', page: '工作忙碌.html' },
+  { thumb: 'images/今日心籤/被花包圍的小石頭.png', large: 'images/療癒金句/被花包圍的小石頭.png', page: '自我價值低落.html' },
+  { thumb: 'images/今日心籤/湖面上的我.png', large: 'images/療癒金句/湖面上的我.png', page: '自我價值低落.html' },
+  { thumb: 'images/今日心籤/無聲地陪伴.png', large: 'images/療癒金句/無聲地陪伴.png', page: '家務壓力.html' },
+  { thumb: 'images/今日心籤/漂流的紙船.png', large: 'images/療癒金句/漂流的紙船.png', page: '職涯發展迷茫.html' },
+  { thumb: 'images/今日心籤/靜靜轉動的風車.png', large: 'images/療癒金句/靜靜轉動的風車.png', page: '職涯發展迷茫.html' },
+  { thumb: 'images/今日心籤/霧裡的燈光.png', large: 'images/療癒金句/霧裡的燈光.png', page: '職涯發展迷茫.html' },
+  { thumb: 'images/今日心籤/鑰匙的箱子.png', large: 'images/療癒金句/鑰匙的箱子.png', page: '社會角色期待.html' },
+  { thumb: 'images/今日心籤/日常裡的禮物.png', large: 'images/療癒金句/日常裡的禮物.png', page: '家務壓力.html' },
+  { thumb: 'images/今日心籤/還沒畫完的星星.png', large: 'images/療癒金句/還沒畫完的星星.png', page: '自我價值低落.html' },
+  { thumb: 'images/今日心籤/玻璃花園.png', large: 'images/療癒金句/玻璃花園.png', page: '社會角色期待.html' },
+  { thumb: 'images/今日心籤/溜出來慢慢走.png', large: 'images/療癒金句/溜出來慢慢走.png', page: '社會角色期待.html' },
+  { thumb: 'images/今日心籤/花之絮語.png', large: 'images/療癒金句/花之絮語.png', page: '社會角色期待.html' },
+];
+
+// ✅ 若為 1024px 以下且直式，換成直式用圖
+if (window.innerWidth <= 1024 && window.matchMedia('(orientation: portrait)').matches) {
+  imagePairs.forEach(pair => {
+    const filename = pair.large.split('/').pop().replace('.png', '');
+    // 假設直式圖放在另一資料夾，如「療癒金句-直式」內
+    pair.large = `images/療癒金句/中版/1x/${filename}.png`;
+  });
+}
+
+if (window.innerWidth <= 450 && window.matchMedia('(orientation: portrait)').matches) {
+  imagePairs.forEach(pair => {
+    const filename = pair.large.split('/').pop().replace('.png', '');
+    // 假設直式圖放在另一資料夾，如「療癒金句-直式」內
+    pair.large = `images/療癒金句/小版/${filename}.png`;
+  });
+}
+
+// --- 以下是你的原程式 ---
+function getRandomImages(arr, num) {
+  const shuffled = [...arr].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, num);
+}
+
+const imageGrid = document.getElementById('imageGrid');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.querySelector('.lightbox-img');
+const closeBtn = document.querySelector('.lightbox .close');
+
+function renderImages() {
+  const selectedImages = getRandomImages(imagePairs, 8);
+  imageGrid.innerHTML = '';
+
+  selectedImages.forEach(pair => {
+    const img = document.createElement('img');
+    img.src = pair.thumb;
+    img.alt = '今日心籤';
+    imageGrid.appendChild(img);
+
+    img.addEventListener('click', () => {
+      lightbox.style.display = 'flex';
+      lightboxImg.src = pair.large;
+    });
+  });
+}
+
+const lightboxButton = document.querySelector('.go-page-button');
+lightboxButton.addEventListener('click', () => {
+  const filename = decodeURIComponent(lightboxImg.src.split('/').pop());
+  const pair = imagePairs.find(p => p.large.endsWith(filename));
+
+  if (pair && pair.page) {
+    window.location.href = pair.page;
+  } else {
+    console.log('找不到對應頁面:', filename);
+  }
+});
+
+const captionButton = document.querySelector('.caption-button');
+captionButton.addEventListener('click', () => {
+  const randomPair = imagePairs[Math.floor(Math.random() * imagePairs.length)];
+  lightboxImg.src = randomPair.large;
+  lightbox.style.display = 'flex';
+});
+
+closeBtn.addEventListener('click', () => lightbox.style.display = 'none');
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox) lightbox.style.display = 'none';
+});
+
+renderImages();
+
+
+window.addEventListener("scroll", () => {
+  const imageGrid = document.querySelector(".image-grid");
+  const decorImgs = document.querySelectorAll(".bottom-decor-img");
+
+  const gridTop = imageGrid.offsetTop;
+  const gridHeight = imageGrid.offsetHeight;
+  const gridBottom = gridTop + gridHeight;
+
+  const scrollBottom = window.scrollY + window.innerHeight; // 畫面底部位置
+
+  // 當畫面底部超過 image-grid 底部時觸發
+  if (scrollBottom > gridBottom- 50) {
+    decorImgs.forEach(el => el.classList.add("active"));
+  } else {
+    decorImgs.forEach(el => el.classList.remove("active"));
+  }
+});
+
+  </script>
+  <script>
+    function updateDecorImages() {
+      const decor1 = document.querySelector('.decor1');
+      const decor2 = document.querySelector('.decor2');
+      const decor3 = document.querySelector('.decor3');
+    
+      if (window.innerWidth <= 450) {
+        decor1.src = 'images/今日心籤_bg1-50.png';
+        decor2.src = 'images/今日心籤_bg2-50.png';
+        decor3.src = 'images/今日心籤_bg3-50.png';
+      } else {
+        decor1.src = 'images/今日心籤_bg1-34.png';
+        decor2.src = 'images/今日心籤_bg2-34.png';
+        decor3.src = 'images/今日心籤_bg3-34.png';
+      }
+    }
+    
+    // 初始化
+    updateDecorImages();
+    
+    // 螢幕縮放時自動更新
+    window.addEventListener('resize', updateDecorImages);
+
+
+// ✨ 綻息風柔光游標特效 ✨
+</script>
+
+<script>
+  const cursor = document.querySelector('.cursor');
+ const canvas = document.getElementById('trail');
+ const ctx = canvas.getContext('2d');
+ const transition = document.getElementById('pageTransition');
+ 
+ canvas.width = window.innerWidth;
+ canvas.height = window.innerHeight;
+ 
+ let particles = [];
+ let lastTime = 0;
+ 
+ // --- 共用產生粒子函式 ---
+ function createParticle(x, y) {
+   const now = Date.now();
+   if (now - lastTime > 40) {
+     particles.push({
+       x, y,
+       alpha: 1,
+       size: Math.random()*4 + 2,
+       dx: (Math.random()-0.5)*1.2,
+       dy: (Math.random()-0.5)*1.2,
+       color: ['rgba(250,178,146,0.9)','rgba(250,178,146,0.8)','rgba(255,215,150,0.8)'][Math.floor(Math.random()*3)]
+     });
+     lastTime = now;
+   }
+   if(particles.length>80) particles.shift();
+ }
+ 
+ // --- 光粒繪製 ---
+ function draw() {
+   ctx.clearRect(0,0,canvas.width,canvas.height);
+   particles.forEach((p,i)=>{
+     p.x += p.dx; p.y += p.dy;
+     p.alpha -= 0.012;
+     if(p.alpha <= 0) particles.splice(i,1);
+     else {
+       ctx.beginPath();
+       const fadeColor = p.color.replace(/[\d.]+\)$/g,`${p.alpha})`);
+       ctx.fillStyle = fadeColor;
+       ctx.shadowColor = fadeColor;
+       ctx.shadowBlur = 15;
+       ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+       ctx.fill();
+     }
+   });
+   requestAnimationFrame(draw);
+ }
+ draw();
+ 
+ // --- 桌機滑鼠事件 ---
+ document.addEventListener('mousemove', e => {
+   cursor.style.left = e.clientX+'px';
+   cursor.style.top = e.clientY+'px';
+   cursor.style.opacity = 1;
+   createParticle(e.clientX, e.clientY);
+ });
+ 
+ // --- 手機觸控事件 ---
+ document.addEventListener('touchstart', e => {
+  const touch = e.touches[0];
+  cursor.style.left = touch.clientX + 'px';
+  cursor.style.top = touch.clientY + 'px';
+  cursor.style.opacity = 1;
+
+  // 點按後 0.3 秒自動消失
+  setTimeout(() => {
+    cursor.style.opacity = 0;
+  }, 100);
+
+  // 可同時產生粒子效果
+  createParticle(touch.clientX, touch.clientY);
+});
+ 
+ document.addEventListener('touchmove', e=>{
+   const touch = e.touches[0];
+   cursor.style.left = touch.clientX+'px';
+   cursor.style.top = touch.clientY+'px';
+   cursor.style.opacity = 1;
+   createParticle(touch.clientX, touch.clientY);
+ });
+ 
+ document.addEventListener('touchend', ()=>{
+   cursor.style.opacity = 0;
+ });
+ 
+ document.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', e => {
+    // 如果是歌曲呈現，直接 return，不做任何動作
+    if (link.getAttribute('href') === '#song-section') {
+      e.preventDefault(); // 阻止預設行為
+      return;
+    }
+
+    e.preventDefault();
+    const href = link.href;
+
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+
+    // 設定圓形圓心
+    transition.style.left = clickX + 'px';
+    transition.style.top = clickY + 'px';
+
+    // 顯示 Logo
+    const logo = document.getElementById('transitionLogo');
+    logo.style.opacity = 1;
+
+    // 擴散圓形
+    requestAnimationFrame(() => {
+      transition.style.transform = 'translate(-50%, -50%) scale(30)';
+
+      // logo 呼吸動畫
+      logo.animate([
+        { transform: 'translate(-50%, -50%) scale(1)' },
+        { transform: 'translate(-50%, -60%) scale(1.1)' },
+        { transform: 'translate(-50%, -50%) scale(1)' }
+      ], {
+        duration: 2000,
+        iterations: 3
+      });
+    });
+
+    // 動畫完成後跳頁
+    setTimeout(() => window.location.href = href, 1200);
+  });
+});
+
+ 
+ // 初始隱藏圓形與 Logo
+ window.addEventListener('load', () => {
+   transition.style.transform = 'translate(-50%, -50%) scale(0)';
+   document.getElementById('transitionLogo').style.opacity = 0;
+ });
+ 
+ 
+ 
+ </script>
+    
+  
+  
+  
+</html>
