@@ -2625,12 +2625,12 @@ document.querySelectorAll('a').forEach(link => {
         { transform: 'translate(-50%, -50%) scale(1)' }
       ], {
         duration: 2000,
-        iterations: 3
+        iterations: Infinity // 一直呼吸
       });
     });
 
     // 動畫完成後跳頁
-    setTimeout(() => window.location.href = href, 1200);
+    setTimeout(() => window.location.href = href, 2500);
   });
 });
 
