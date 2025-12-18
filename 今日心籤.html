@@ -1433,14 +1433,16 @@ main {
   .top-image-caption-wrapper {
     margin-top: -5%;
   }
+  
   .top-image-caption {
-    font-size: 18px; /* 原本 35px 太大 */
-    gap: 5px;
-  }
-  .caption-button {
-    width: 55px !important; /* 按鈕縮小一點 */
+    flex-direction: column; /* 變成上下排列 */
+    gap: 8px;               /* 可自行調整上下間距 */
+    font-size: 20px;        /* 手機字體通常要小一點 */
   }
 
+  .caption-button {
+    width: 70px !important; /* 手機版按鈕可稍微小一點 */
+  }
   /* Lightbox */
   .lightbox-content {
     width: 95%;
