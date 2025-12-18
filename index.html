@@ -1618,7 +1618,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 @media (max-width: 400px) {
   .about-text {
-  max-width: 80%;
+  max-width: 85%;
 }
 /* 基本文字樣式 */
 .about-text p {
@@ -2364,12 +2364,12 @@ nextBtn.addEventListener('click', () => {
         { transform: 'translate(-50%, -50%) scale(1)' }
       ], {
         duration: 2000,
-        iterations: 3
+        iterations: Infinity // 一直呼吸
       });
     });
 
     // 動畫完成後跳頁
-    setTimeout(() => window.location.href = href, 1200);
+    setTimeout(() => window.location.href = href, 2500);
   });
 });
 
