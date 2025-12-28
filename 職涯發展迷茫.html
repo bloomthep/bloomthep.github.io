@@ -440,6 +440,7 @@ body {
   z-index: 998;
 }
 
+/* 桌機版小圓初始狀態 */
 #pageTransition {
   position: fixed;
   width: 100px;
@@ -449,7 +450,8 @@ body {
   transform: translate(-50%, -50%) scale(0);
   z-index: 1000;
   pointer-events: none;
-  transition: transform 1s ease-out;
+  transition: transform 1s ease-out, opacity 0.3s ease;
+  opacity: 1; /* 桌機版保持顯示 */
 }
 
 #transitionLogo {
@@ -460,8 +462,21 @@ body {
   height: auto;
   transform: translate(-50%, -50%) scale(1);
   z-index: 1001;
-  opacity: 0; /* 初始隱藏 */
-  transition: opacity 0.2s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 手機版滿版覆蓋 */
+@media (max-width: 768px) {
+  #pageTransition {
+    width: 100vw;
+    height: 100vh;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 0;
+    opacity: 1;
+  }
 }
 
 /* 整個頁面滾輪 */
@@ -2563,56 +2578,92 @@ document.querySelectorAll('.flip-card').forEach(card => {
    cursor.style.opacity = 0;
  });
  
- document.querySelectorAll('a').forEach(link => {
+ // ------------------- 點擊轉場（桌機用） -------------------
+document.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', e => {
-    // 如果是歌曲呈現，直接 return，不做任何動作
+    if (isMobile) return; // 手機版不做桌機動畫
+
     if (link.getAttribute('href') === '#song-section') {
-      e.preventDefault(); // 阻止預設行為
+      e.preventDefault();
       return;
     }
 
     e.preventDefault();
     const href = link.href;
-
     const clickX = e.clientX;
     const clickY = e.clientY;
 
-    // 設定圓形圓心
+    const transition = document.getElementById('pageTransition');
+    const logo = document.getElementById('transitionLogo');
+
+    // 桌機版初始小圓動畫
     transition.style.left = clickX + 'px';
     transition.style.top = clickY + 'px';
+    transition.style.opacity = 1;
+    transition.style.transform = 'translate(-50%, -50%) scale(0)';
 
     // 顯示 Logo
-    const logo = document.getElementById('transitionLogo');
     logo.style.opacity = 1;
 
-    // 擴散圓形
+    // 平滑放大
     requestAnimationFrame(() => {
       transition.style.transform = 'translate(-50%, -50%) scale(30)';
 
-      // logo 呼吸動畫
       logo.animate([
         { transform: 'translate(-50%, -50%) scale(1)' },
         { transform: 'translate(-50%, -60%) scale(1.1)' },
         { transform: 'translate(-50%, -50%) scale(1)' }
       ], {
         duration: 2000,
-        iterations: Infinity // 一直呼吸
+        iterations: Infinity
       });
     });
 
     // 動畫完成後跳頁
-    setTimeout(() => window.location.href = href, 2500);
+    setTimeout(() => {
+      logo.getAnimations().forEach(a => a.cancel());
+      window.location.href = href;
+    }, 2500);
   });
 });
 
- 
- // 初始隱藏圓形與 Logo
- window.addEventListener('load', () => {
-   transition.style.transform = 'translate(-50%, -50%) scale(0)';
-   document.getElementById('transitionLogo').style.opacity = 0;
- });
- 
- 
+// ------------------- 手機版進場動畫 -------------------
+window.addEventListener('DOMContentLoaded', () => {
+  if (!isMobile) return;
+
+  const transition = document.getElementById('pageTransition');
+  const logo = document.getElementById('transitionLogo');
+
+  // 初始狀態：滿版 + Logo
+  transition.style.left = '50%';
+  transition.style.top = '50%';
+  transition.style.width = '100vw';
+  transition.style.height = '100vh';
+  transition.style.transform = 'translate(-50%, -50%)';
+  transition.style.opacity = 1;
+
+  logo.style.opacity = 1;
+
+  // ---------------- Logo 呼吸動畫 ----------------
+  logo.animate([
+    { transform: 'translate(-50%, -50%) scale(1)' },
+    { transform: 'translate(-50%, -60%) scale(1.1)' },
+    { transform: 'translate(-50%, -50%) scale(1)' }
+  ], {
+    duration: 2000,
+    iterations: Infinity
+  });
+
+  // 維持幾秒後淡出轉場圓形和 Logo
+  setTimeout(() => {
+    transition.style.transition = 'opacity 1s ease';
+    logo.style.transition = 'opacity 1s ease';
+
+    transition.style.opacity = 0;
+    logo.style.opacity = 0;
+  }, 2800);
+});
+
  </script>
     
     
