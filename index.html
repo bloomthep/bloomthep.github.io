@@ -217,11 +217,7 @@ body::-webkit-scrollbar-thumb:hover {
   animation: titleZoomMove 1.2s ease-out forwards;
   animation-delay: 0.5s;
 }
-@media (max-width: 768px) {
-  .hero-title {
-    animation-delay: 3s;
-  }
-}
+
 
 @keyframes titleZoomMove {
   0% {
@@ -1283,8 +1279,14 @@ body::-webkit-scrollbar-thumb:hover {
   width: 85%;
 }
 }
+
 /* 📱 RWD：在手機上雲朵會縮小 */
 @media (max-width: 768px) {
+  .hero-content {
+    animation-delay: 3s;
+  }
+  
+  
   .concept-cloud,
   .character-cloud {
     width: 200px;
