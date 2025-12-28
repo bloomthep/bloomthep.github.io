@@ -448,15 +448,30 @@ body {
 
 #pageTransition {
   position: fixed;
-  width: 100px;
-  height: 100px;
+  left: 50%;
+  top: 50%;
+  width: 120vmax;
+  height: 120vmax;
   background: rgba(216, 167, 135, 1);
   border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
   z-index: 1000;
   pointer-events: none;
-  transition: transform 1s ease-out;
+
+  /* 關鍵 */
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0);
+
+  transition:
+    transform 1s ease-out,
+    opacity 0.4s ease;
 }
+
+/* 轉場啟動狀態 */
+#pageTransition.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
 
 #transitionLogo {
   position: fixed;
@@ -464,10 +479,13 @@ body {
   left: 50%;
   width: 150px;
   height: auto;
-  transform: translate(-50%, -50%) scale(1);
   z-index: 1001;
-  opacity: 0; /* 初始隱藏 */
-  transition: opacity 0.2s ease;
+
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
+  display: none;
+
+  transition: opacity 0.3s ease;
 }
 
 
@@ -2645,67 +2663,85 @@ document.querySelectorAll('a').forEach(link => {
 //這裡是我新加的
 let isTransitioning = false;
 
-// 點擊轉場
+const logo = document.getElementById('transitionLogo');
+
+/* ===== 重置轉場（關鍵共用函式） ===== */
+function resetTransition() {
+  transition.classList.remove('active');
+  transition.style.opacity = 0;
+
+  logo.style.opacity = 0;
+  logo.style.display = 'none';
+  logo.getAnimations().forEach(anim => anim.cancel());
+
+  isTransitioning = false;
+}
+
+/* ===== 點擊轉場 ===== */
 document.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', e => {
     if (isTransitioning) return;
-    isTransitioning = true;
 
+    // 不需要轉場的連結
     if (link.getAttribute('href') === '#song-section') {
       e.preventDefault();
-      isTransitioning = false;
       return;
     }
 
     e.preventDefault();
+    isTransitioning = true;
+
     const href = link.href;
 
+    // 手機沒有 clientX / clientY，用畫面中心
     const clickX = e.clientX || window.innerWidth / 2;
     const clickY = e.clientY || window.innerHeight / 2;
 
     transition.style.left = clickX + 'px';
     transition.style.top = clickY + 'px';
 
-    const logo = document.getElementById('transitionLogo');
+    // 顯示 logo
+    logo.style.display = 'block';
     logo.style.opacity = 1;
 
+    // 啟動轉場（用 class）
     requestAnimationFrame(() => {
-      transition.style.transform = 'translate(-50%, -50%) scale(30)';
-      logo.animate([
-        { transform: 'translate(-50%, -50%) scale(1)' },
-        { transform: 'translate(-50%, -60%) scale(1.1)' },
-        { transform: 'translate(-50%, -50%) scale(1)' }
-      ], {
-        duration: 2000,
-        iterations: Infinity
-      });
+      transition.classList.add('active');
+
+      logo.animate(
+        [
+          { transform: 'translate(-50%, -50%) scale(1)' },
+          { transform: 'translate(-50%, -60%) scale(1.1)' },
+          { transform: 'translate(-50%, -50%) scale(1)' }
+        ],
+        {
+          duration: 2000,
+          iterations: Infinity
+        }
+      );
     });
 
+    // 換頁
     setTimeout(() => {
-      logo.getAnimations().forEach(a => a.cancel());
+      logo.getAnimations().forEach(anim => anim.cancel());
       window.location.href = href;
     }, 2500);
   });
 });
 
-// 🔙 返回鍵前（最重要）
-window.addEventListener('pagehide', () => {
-  transition.style.transform = 'translate(-50%, -50%) scale(0)';
-  const logo = document.getElementById('transitionLogo');
-  logo.style.opacity = 0;
-  logo.getAnimations().forEach(a => a.cancel());
-  isTransitioning = false;
-});
+/* ===== 返回鍵前（Safari 關鍵） ===== */
+window.addEventListener('pagehide', resetTransition);
 
-// 🔙 返回鍵後
+/* ===== 返回鍵後（從 bfcache 回來） ===== */
 window.addEventListener('pageshow', e => {
-  if (!e.persisted) return;
-
-  transition.style.transform = 'translate(-50%, -50%) scale(0)';
-  const logo = document.getElementById('transitionLogo');
-  logo.style.opacity = 0;
-  logo.getAnimations().forEach(a => a.cancel());
+  if (e.persisted) {
+    resetTransition();
+  }
 });
+
+/* ===== 初始保險 ===== */
+window.addEventListener('load', resetTransition);
+
 
 </script>
 
