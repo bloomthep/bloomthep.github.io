@@ -828,6 +828,9 @@ body::-webkit-scrollbar-thumb:hover {
 
 /* ========== 手機版 (768px 以下) ========== */
 @media (max-width: 768px) {
+  .content {
+  animation-delay: 2.8s;
+}
   /* 不顯示開場圖與按鈕 */
   #introOverlay,
   #introImage,
@@ -2405,15 +2408,19 @@ function getMaxUpOffset() {
 // 初始化目前裝置設定
 let maxUpOffset = getMaxUpOffset();
 
-// 🎬 初始動畫（淡入 + 下滑）
-topVideo.style.transform = `translateY(${initialOffset}px)`;
-topVideo.style.transition = 'transform 1.5s ease-out, opacity 1.5s ease-out';
-topVideo.style.opacity = '0';
+// 🎬 延遲觸發動畫
+const delay = isMobile ? 2800 : 0; // 手機版延遲 1 秒，桌機立即
 
-requestAnimationFrame(() => {
-  topVideo.style.transform = `translateY(0px)`;
-  topVideo.style.opacity = '1';
-});
+setTimeout(() => {
+  topVideo.style.transform = `translateY(${initialOffset}px)`;
+  topVideo.style.transition = 'transform 1.5s ease-out, opacity 1.5s ease-out';
+  topVideo.style.opacity = '0';
+
+  requestAnimationFrame(() => {
+    topVideo.style.transform = `translateY(0px)`;
+    topVideo.style.opacity = '1';
+  });
+}, delay);
 
 // 🪶 視差滾動效果
 window.addEventListener('scroll', () => {
