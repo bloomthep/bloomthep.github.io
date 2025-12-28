@@ -2643,23 +2643,11 @@ document.querySelectorAll('a').forEach(link => {
  
  
 //這裡是我新加的
- window.addEventListener('pageshow', () => {
-  // 重置轉場圓形
-  transition.style.transform = 'translate(-50%, -50%) scale(0)';
-
-  // 隱藏 logo
-  const logo = document.getElementById('transitionLogo');
-  logo.style.opacity = 0;
-
-  // 停止 logo 所有動畫
-  logo.getAnimations().forEach(anim => anim.cancel());
-});
-
 let isTransitioning = false;
 
+// 點擊轉場
 document.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', e => {
-
     if (isTransitioning) return;
     isTransitioning = true;
 
@@ -2694,12 +2682,31 @@ document.querySelectorAll('a').forEach(link => {
     });
 
     setTimeout(() => {
+      logo.getAnimations().forEach(a => a.cancel());
       window.location.href = href;
     }, 2500);
   });
 });
 
- 
+// 🔙 返回鍵前（最重要）
+window.addEventListener('pagehide', () => {
+  transition.style.transform = 'translate(-50%, -50%) scale(0)';
+  const logo = document.getElementById('transitionLogo');
+  logo.style.opacity = 0;
+  logo.getAnimations().forEach(a => a.cancel());
+  isTransitioning = false;
+});
+
+// 🔙 返回鍵後
+window.addEventListener('pageshow', e => {
+  if (!e.persisted) return;
+
+  transition.style.transform = 'translate(-50%, -50%) scale(0)';
+  const logo = document.getElementById('transitionLogo');
+  logo.style.opacity = 0;
+  logo.getAnimations().forEach(a => a.cancel());
+});
+
 </script>
 
     
