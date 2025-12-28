@@ -217,6 +217,11 @@ body::-webkit-scrollbar-thumb:hover {
   animation: titleZoomMove 1.2s ease-out forwards;
   animation-delay: 0.5s;
 }
+@media (max-width: 768px) {
+  .hero-title {
+    animation-delay: 3s;
+  }
+}
 
 @keyframes titleZoomMove {
   0% {
@@ -2063,7 +2068,7 @@ function showNextSlide() {
 }
 
 // 每 3 秒換一張
-setInterval(showNextSlide, 3000);
+setInterval(showNextSlide, 5000);
 
 function updateNavbarScroll() {
   const navbar = document.querySelector('.navbar');
@@ -2090,31 +2095,42 @@ window.addEventListener('scroll', updateNavbarScroll);
 
 </script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.querySelector('.overlay');
-    const hero = document.querySelector('.hero');
-  
+  window.addEventListener('DOMContentLoaded', () => {
+  const overlay = document.querySelector('.overlay');
+  const hero = document.querySelector('.hero');
+
+  // 如果是手機版轉場動畫，等轉場結束再開始 overlay 動畫
+  if (isMobile) {
+    setTimeout(() => {
+      initOverlayScale();
+    }, 2800); // 等手機轉場動畫淡出 (可以依你轉場時間調整)
+  } else {
+    initOverlayScale();
+  }
+
+  function initOverlayScale() {
     function scaleOverlayOnScroll() {
       const heroRect = hero.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-  
       let visibleRatio = 0;
-  
+
       if (heroRect.bottom > 0 && heroRect.top < windowHeight) {
         const visibleHeight = Math.min(heroRect.bottom, windowHeight) - Math.max(heroRect.top, 0);
         visibleRatio = visibleHeight / heroRect.height;
       }
-  
-      // hero 完全可見: scale=1，完全離開: scale=2，中間自動插值
+
       const scale = 1 + (1 - visibleRatio);
       overlay.style.transform = `scale(${scale})`;
     }
-// 初始呼叫
-scaleOverlayOnScroll();
 
-// 滾動時更新
-window.addEventListener('scroll', scaleOverlayOnScroll);
+    // 初始呼叫
+    scaleOverlayOnScroll();
+
+    // 滾動時更新
+    window.addEventListener('scroll', scaleOverlayOnScroll);
+  }
 });
+
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", () => {
