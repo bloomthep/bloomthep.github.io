@@ -851,7 +851,7 @@ body::-webkit-scrollbar-thumb:hover {
 
 
 
-/* 左右按鈕 */
+/* 左右按鈕共用樣式 */
 .scroll-btn {
   width: 80px;
   height: 80px;
@@ -859,23 +859,40 @@ body::-webkit-scrollbar-thumb:hover {
   background: url('image/button-23.png') no-repeat center center;
   background-size: contain;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, background-image 0.3s ease;
 }
 
+/* 右按鈕覆寫圖片 */
 .right-btn {
   background-image: url('image/button.png');
 }
 
-/* hover 效果 */
-.scroll-btn:hover {
-  background-image: url('image/button-hover-22.png');
-  transform: scale(1.1);
+/* 🖥️ 桌機 hover（滑鼠專用） */
+@media (hover: hover) {
+  .scroll-btn:hover {
+    background-image: url('image/button-hover-22.png');
+    transform: scale(1.1);
+  }
+
+  .right-btn:hover {
+    background-image: url('image/button-hover-21.png');
+    transform: scale(1.1);
+  }
 }
 
-.right-btn:hover {
-  background-image: url('image/button-hover-21.png');
-  transform: scale(1.1);
+/* 📱 手機點按瞬間（觸控專用） */
+@media (hover: none) {
+  .scroll-btn:active {
+    background-image: url('image/button-hover-22.png');
+    transform: scale(1.1);
+  }
+
+  .right-btn:active {
+    background-image: url('image/button-hover-21.png');
+    transform: scale(1.1);
+  }
 }
+
 
 
 .fade-in-left {
