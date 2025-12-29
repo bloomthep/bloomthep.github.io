@@ -857,29 +857,38 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 0px;
   margin-bottom: 80px; /* 底部空間更大一點 */
 }
-/* 按鈕樣式 */
+/* 基本樣式 */
 #toggleLyricsBtn {
-  background-color: #ffffff;  /* 原始顏色 */
+  background-color: #ffffff;
   color: #7d5f4f;
   border: none;
   padding: 12px 28px;
   font-size: 23px;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.25s ease, transform 0.2s ease;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-#toggleLyricsBtn:hover {
-  background-color: #d8a787;  /* 滑過變色 */
-  color: #ffffff;
-  transform: translateY(-2px);
+/* 🖥️ 桌機滑過 */
+@media (hover: hover) {
+  #toggleLyricsBtn:hover {
+    background-color: #d8a787;
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
 }
-/* 手機點按瞬間 */
+
+/* 📱 手機按壓瞬間 */
 #toggleLyricsBtn:active {
   background-color: #d8a787;
   color: #ffffff;
-  transform: scale(0.96); /* 可選，增加按壓感 */
+  transform: scale(0.96);
+}
+
+/* 避免手機點完殘留 */
+#toggleLyricsBtn:focus {
+  outline: none;
 }
 
 #lyricsContent {
