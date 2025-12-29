@@ -872,24 +872,41 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 0px;
   margin-bottom: 80px; /* 底部空間更大一點 */
 }
-/* 按鈕樣式 */
+/* 基本樣式 */
 #toggleLyricsBtn {
-  background-color: #d8a787;  /* 原始顏色 */
-  color: #ffffff;
+  background-color: #ffffff;
+  color: #7d5f4f;
   border: none;
   padding: 12px 28px;
   font-size: 23px;
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
 }
 
-#toggleLyricsBtn:hover {
-  background-color: #f0e9dd;  /* 滑過變色 */
-  color: #cec93e;
-  transform: translateY(-2px);
+/* 🖥️ 桌機 hover（只在真的有 hover 的裝置） */
+@media (hover: hover) {
+  #toggleLyricsBtn:hover {
+    background-color: #d8a787;
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
 }
+
+/* 📱 手機：歌詞展開狀態 */
+@media (hover: none) {
+  #toggleLyricsBtn.is-open {
+    background-color: #d8a787;
+    color: #ffffff;
+  }
+}
+
+/* 避免 focus 殘留 */
+#toggleLyricsBtn:focus {
+  outline: none;
+}
+
 
 #lyricsContent {
   font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
@@ -2496,6 +2513,9 @@ toggleBtn.addEventListener('click', () => {
   expanded = !expanded;
   lyricsContent.classList.toggle('show', expanded);
   toggleBtn.textContent = expanded ? '收回歌詞 ↑' : '查看完整歌詞 ↓';
+
+  // ⭐ 關鍵這行：切換狀態 class
+  toggleBtn.classList.toggle('is-open', expanded);
 });
 
 // 當畫面滾到 soil-section 時，改變浮動圖示顏色
