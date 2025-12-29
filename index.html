@@ -430,10 +430,22 @@ body::-webkit-scrollbar-thumb:hover {
   transition: all 0.3s ease;
 }
 
-.next-btn:hover {
-  content: url("image/button-hover.png");
-  transform: scale(1.1);
+/* 🖥️ 桌機滑鼠 hover */
+@media (hover: hover) {
+  .next-btn:hover {
+    content: url("image/button-hover.png");
+    transform: scale(1.1);
+  }
 }
+
+/* 📱 手機點按瞬間 */
+@media (hover: none) {
+  .next-btn:active {
+    content: url("image/button-hover.png");
+    transform: scale(1.1);
+  }
+}
+
 
 /* Navbar */
 .navbar {
