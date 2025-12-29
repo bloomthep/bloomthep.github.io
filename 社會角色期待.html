@@ -2059,7 +2059,7 @@ body::-webkit-scrollbar-thumb:hover {
       <!-- Dropdown: 歌曲呈現 -->
       <div class="nav-item dropdown">
         <div class="dropdown-header">
-          <a class="nav-link" href="#song-section">歌曲呈現</a>
+          <a class="nav-link dropdown-title" href="#song-section">歌曲呈現</a>
           <button class="dropdown-toggle-btn">+</button> <!-- 小加號按鈕 -->
         </div>
         <div class="dropdown-menu">
@@ -2246,26 +2246,46 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Dropdown 展開/收合
-  dropdownBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const dropdown = btn.closest('.dropdown');
-      const menu = dropdown.querySelector('.dropdown-menu');
-      const isOpen = dropdown.classList.toggle('show');
+  function toggleDropdown(dropdown, forceOpen = null) {
+  const menu = dropdown.querySelector('.dropdown-menu');
+  const btn = dropdown.querySelector('.dropdown-toggle-btn');
 
-      if (isOpen) {
-        menu.style.maxHeight = menu.scrollHeight + 'px';
-        menu.style.opacity = '1';
-        menu.style.visibility = 'visible';
-        btn.textContent = '−';
-      } else {
-        menu.style.maxHeight = 0;
-        menu.style.opacity = '0';
-        menu.style.visibility = 'hidden';
-        btn.textContent = '+';
-      }
-    });
+  const isOpen = forceOpen !== null
+    ? forceOpen
+    : !dropdown.classList.contains('show');
+
+  if (isOpen) {
+    dropdown.classList.add('show');
+    menu.style.maxHeight = menu.scrollHeight + 'px';
+    menu.style.opacity = '1';
+    menu.style.visibility = 'visible';
+    btn.textContent = '−';
+  } else {
+    dropdown.classList.remove('show');
+    menu.style.maxHeight = 0;
+    menu.style.opacity = '0';
+    menu.style.visibility = 'hidden';
+    btn.textContent = '+';
+  }
+}
+
+document.querySelectorAll('.dropdown-toggle-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const dropdown = btn.closest('.dropdown');
+    toggleDropdown(dropdown);
   });
+});
+
+document.querySelectorAll('.dropdown-title').forEach(title => {
+  title.addEventListener('click', (e) => {
+    e.preventDefault();
+    const dropdown = title.closest('.dropdown');
+
+    // 👇 跟 + 一樣：可開、可關
+    toggleDropdown(dropdown);
+  });
+});
 
   // 滾動 navbar 背景 + 漢堡顏色（overlay 關閉時才有效）
   window.addEventListener('scroll', () => {
