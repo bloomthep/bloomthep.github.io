@@ -2306,9 +2306,12 @@ document.querySelectorAll('.dropdown-title').forEach(title => {
   title.addEventListener('click', (e) => {
     e.preventDefault();
     const dropdown = title.closest('.dropdown');
-    toggleDropdown(dropdown, true);
+
+    // 👇 跟 + 一樣：可開、可關
+    toggleDropdown(dropdown);
   });
 });
+
 
 
   // 滾動 navbar 背景 + 漢堡顏色（overlay 關閉時才有效）
