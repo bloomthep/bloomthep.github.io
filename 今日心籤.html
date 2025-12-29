@@ -716,16 +716,27 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 .caption-button {
-  width: 85px!important;   /* 按鈕大小，可自行調整 */
+  width: 85px !important;   /* 按鈕大小，可自行調整 */
   height: auto;
-  cursor: pointer; /* 滑鼠變手型 */
+  cursor: pointer;           /* 滑鼠變手型 */
   transition: transform 0.2s;
-  z-index: 10; /* 讓它浮上來 */
+  z-index: 10;               /* 浮上來 */
 }
 
-.caption-button:hover {
-  transform: scale(1.1); /* 滑鼠經過有放大效果 */
+/* 🖥️ 桌機 hover */
+@media (hover: hover) {
+  .caption-button:hover {
+    transform: scale(1.1);  /* 滑鼠經過放大 */
+  }
 }
+
+/* 📱 手機點按瞬間 */
+@media (hover: none) {
+  .caption-button:active {
+    transform: scale(1.1);  /* 手指按下瞬間放大 */
+  }
+}
+
 
 .image-grid {
   display: grid;
