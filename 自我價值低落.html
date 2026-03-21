@@ -862,6 +862,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: #7d5f4f;
   border: none;
   padding: 12px 28px;
+  margin-top: 20px;
   font-size: 23px;
   border-radius: 50px;
   cursor: pointer;
@@ -890,14 +891,29 @@ body::-webkit-scrollbar-thumb:hover {
 #toggleLyricsBtn:focus {
   outline: none;
 }
+/* 預覽區：只顯示前幾行 */
+#lyricsPreview {
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 30px auto 0;
+  line-height: 3; /* 比原本的 2.2 開一點 */
+  font-size: 18px;
+  letter-spacing: 1.5px;
+  color: #7d5f4f;
 
+  /* ⭐ 底部淡出（由上到下變淡） */
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+}
 
+/* 完整歌詞區：你的原始動畫保留 */
 #lyricsContent {
-  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
   letter-spacing: 2px;
   position: relative;
   width: 80%;
-  margin: 30px auto 0;
+  margin: 0 auto; /* 預覽已經有 margin，不需要再往下推 */
   font-size: 20px;
   line-height: 2.2;
   color: #7d5f4f;
@@ -906,11 +922,12 @@ body::-webkit-scrollbar-thumb:hover {
   pointer-events: none;
   overflow: hidden;
   max-height: 0;
-  transition: 
-    opacity 0.6s ease, 
-    transform 0.6s ease, 
-    max-height 0.6s ease; /* 三個動畫合併在一起 */
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    max-height 0.6s ease;
 }
+
 
 #lyricsContent.show {
   opacity: 1;
@@ -918,12 +935,14 @@ body::-webkit-scrollbar-thumb:hover {
   pointer-events: auto;
   max-height: 800px; /* 可依內容調整 */
 }
-#lyricsContent .english {
-  font-size: 16px; /* 比中文小 */
-  display: inline-block; /* 避免換行問題 */
-  letter-spacing: 1px; /* 可微調 */
-  color: #7d5f4f; /* 可以跟中文同色 */
+#lyricsContent .english
+ {
+  font-size: 16px;
+  display: inline-block;
+  letter-spacing: 1px;
+  color: #7d5f4f;
 }
+
 #lyricsContent .english-intro {
   line-height: 3; /* 比原本的 2.2 開一點 */
   font-size: 18px;
@@ -1212,12 +1231,19 @@ body::-webkit-scrollbar-thumb:hover {
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+#lyricsContent {
   letter-spacing: 2px;
   width: 80%;
   margin: 3% auto 0;
   font-size: 18px;
   line-height: 2.2;
+}
+#lyricsPreview {
+  letter-spacing: 1.5px;
+  width: 80%;
+  margin: 3% auto 0;
+  font-size: 18px;
+  line-height: 2.8;
 }
 #lyricsContent .english-intro {
   line-height: 2.8; /* 比原本的 2.2 開一點 */
@@ -1339,18 +1365,25 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
-  letter-spacing: 2px;
+#lyricsPreview {
+  letter-spacing: 1.5px;
   width: 80%;
   margin: 3% auto 0;
+  font-size: 17px;
+  line-height: 2.8;
+}
+#lyricsContent {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 0% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1501,18 +1534,26 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+  margin-top: 10%;
+  margin-bottom: 10%; 
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
+#lyricsPreview {
+  letter-spacing: 1.5px;
+  line-height: 2.8; 
+  width: 80%;
+  margin: 3% auto 0;
+  font-size: 16px;
+}
+  
   #lyricsContent {
   letter-spacing: 2px;
   width: 80%;
-  margin: 3% auto 0;
+  margin: 2% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1637,18 +1678,19 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+
+#lyricsContent {
   letter-spacing: 2px;
   width: 80%;
-  margin: 3% auto 0;
+  margin: 1% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1787,18 +1829,25 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-    margin-top: 5%;
-    margin-bottom: 5%;
+    margin-top: 15%;
+    margin-bottom: 10%;
   }
   #toggleLyricsBtn {
     font-size: 18px;
     border-radius: 45px;
     cursor: pointer;
   }
-  #lyricsContent {
+  #lyricsPreview {
     letter-spacing: 1.5px;
     width: 90%;
     margin: 3% auto 0;
+    font-size: 13px;
+    line-height: 2.6;
+  }
+  #lyricsContent {
+    letter-spacing: 1.5px;
+    width: 90%;
+    margin: 0% auto 0;
     font-size: 14px;
     line-height: 2;
   }
@@ -1963,21 +2012,28 @@ body::-webkit-scrollbar-thumb:hover {
 }
 .lyrics-section {
     margin-top: 10%;
-    margin-bottom: 5%;
+    margin-bottom: 10%;
   }
   #toggleLyricsBtn {
     font-size: 16px;
     border-radius: 45px;
     cursor: pointer;
   }
+  #lyricsPreview{
+    line-height: 2.5;
+    letter-spacing: 1.5px;
+    width: 90%;
+    margin: 5% auto 0;
+    font-size: 13px;
+  }
   #lyricsContent {
     letter-spacing: 1.4px;
     width: 90%;
-    margin: 5% auto 0;
+    margin: 1% auto 0;
     font-size: 15px;
   }
   #lyricsContent .english-intro {
-  line-height: 2.5; /* 比原本的 2.2 開一點 */
+  line-height: 2.5;
   font-size: 13px;
   letter-spacing: 1.5px;
 }
@@ -2189,26 +2245,38 @@ body::-webkit-scrollbar-thumb:hover {
 <div class="page-bg">
   <img src="image/雲朵-20.png" alt="雲朵背景">
 </div>
-<div class="lyrics-section" id="lyricsSection">
-  <button id="toggleLyricsBtn">查看完整歌詞 ↓</button>
+<!-- 歌詞區塊 -->
+<div class="lyrics-section">
+  <div id="lyricsPreview">
+    Standing so far away<br>
+    like echoes in the wind<br>
+  </div>
+
   <div id="lyricsContent">
     <div class="english-intro">
-      Standing so far away<br>
-      like echoes in the wind<br>
       Soft as the air I breathe<br>
       I was there , yet unseen<br>
     </div>
+
     有一道氣息悄悄靠近喚醒<br>
     <span class="english">If there could shine a little ray of light</span><br>
+
     每個傷口都是沉默之中<br>
     <span class="english">It would guide me through the weary sea</span><br>
+
     讓光透進來的門<br>
     <span class="english">If I could hold a little reckless song</span><br>
+
     每個角落都能留住內心<br>
     <span class="english">I would sing with you the whole night long</span><br>
+
     容我聽見倒影<br>
-    <span class="english">Winds from afar blow the fear aside</span>
+    <span class="english">Winds from afar blow the fear aside</span><br>
   </div>
+
+  <button id="toggleLyricsBtn">查看完整歌詞 ↓</button>
+</div>
+
 </div>
 </div>
 
@@ -2502,15 +2570,25 @@ window.addEventListener('resize', () => {
 
 const toggleBtn = document.getElementById('toggleLyricsBtn');
 const lyricsContent = document.getElementById('lyricsContent');
+const preview = document.getElementById('lyricsPreview'); 
+
 let expanded = false;
 
 toggleBtn.addEventListener('click', () => {
   expanded = !expanded;
+
   lyricsContent.classList.toggle('show', expanded);
   toggleBtn.textContent = expanded ? '收回歌詞 ↑' : '查看完整歌詞 ↓';
 
-  // ⭐ 關鍵這行：切換狀態 class
   toggleBtn.classList.toggle('is-open', expanded);
+ // ⭐⭐ 重點：開啟時取消淡出，收回時恢復淡出
+ if (expanded) {
+    preview.style.maskImage = "none";
+    preview.style.webkitMaskImage = "none";
+  } else {
+    preview.style.maskImage = "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))";
+    preview.style.webkitMaskImage = "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))";
+  }
 });
 
 // 當畫面滾到 soil-section 時，改變浮動圖示顏色

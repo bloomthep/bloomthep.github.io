@@ -863,6 +863,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: #7d5f4f;
   border: none;
   padding: 12px 28px;
+  margin-top: 20px;
   font-size: 23px;
   border-radius: 50px;
   cursor: pointer;
@@ -891,14 +892,28 @@ body::-webkit-scrollbar-thumb:hover {
 #toggleLyricsBtn:focus {
   outline: none;
 }
+/* 預覽區：只顯示前幾行 */
+#lyricsPreview {
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 30px auto 0;
+  font-size: 20px;
+  line-height: 2.2;
+  color: #7d5f4f;
 
+  /* ⭐ 底部淡出（由上到下變淡） */
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+}
 
+/* 完整歌詞區：你的原始動畫保留 */
 #lyricsContent {
-  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
   letter-spacing: 2px;
   position: relative;
   width: 80%;
-  margin: 30px auto 0;
+  margin: 0 auto;
   font-size: 20px;
   line-height: 2.2;
   color: #7d5f4f;
@@ -907,10 +922,10 @@ body::-webkit-scrollbar-thumb:hover {
   pointer-events: none;
   overflow: hidden;
   max-height: 0;
-  transition: 
-    opacity 0.6s ease, 
-    transform 0.6s ease, 
-    max-height 0.6s ease; /* 三個動畫合併在一起 */
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    max-height 0.6s ease;
 }
 
 #lyricsContent.show {
@@ -919,11 +934,12 @@ body::-webkit-scrollbar-thumb:hover {
   pointer-events: auto;
   max-height: 800px; /* 可依內容調整 */
 }
-#lyricsContent .english {
-  font-size: 16px; /* 比中文小 */
-  display: inline-block; /* 避免換行問題 */
-  letter-spacing: 1px; /* 可微調 */
-  color: #7d5f4f; /* 可以跟中文同色 */
+#lyricsContent .english,
+#lyricsPreview .english {
+  font-size: 16px;
+  display: inline-block;
+  letter-spacing: 1px;
+  color: #7d5f4f;
 }
 
 
@@ -1214,7 +1230,15 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 18px;
   line-height: 2.2;
 }
-#lyricsContent .english {
+#lyricsPreview {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 3% auto 0;
+  font-size: 18px;
+  line-height: 2.2;
+}
+#lyricsContent .english,
+#lyricsPreview .english {
   font-size: 15px; /* 比中文小 */
 }
 .image-scroll-container {
@@ -1328,18 +1352,28 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+#lyricsPreview {
   letter-spacing: 2px;
   width: 80%;
   margin: 3% auto 0;
+  font-size: 17px;
+  line-height: 2.2;
+}
+#lyricsPreview .english {
+  font-size: 14.5px; /* 比中文小 */
+}
+  #lyricsContent {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 1% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1484,19 +1518,29 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 18px;
   line-height: 1.8;
 }
-  .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+.lyrics-section {
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+#lyricsPreview {
   letter-spacing: 2px;
   width: 80%;
   margin: 3% auto 0;
+  font-size: 17px;
+  line-height: 2.2;
+}
+#lyricsPreview .english {
+  font-size: 14.5px; /* 比中文小 */
+}
+#lyricsContent {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 2% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1615,19 +1659,29 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 16px;
   line-height: 1.8;
 }
-  .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+.lyrics-section {
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+#lyricsPreview {
   letter-spacing: 2px;
   width: 80%;
   margin: 3% auto 0;
+  font-size: 17px;
+  line-height: 2.2;
+}
+#lyricsPreview .english {
+  font-size: 15px; /* 比中文小 */
+}
+  #lyricsContent {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 1% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1755,25 +1809,36 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 14px;
   line-height: 1.8;
 }
-  .lyrics-section {
-    margin-top: 5%;
-    margin-bottom: 5%;
+.lyrics-section {
+    margin-top: 15%;
+    margin-bottom: 10%;
   }
   #toggleLyricsBtn {
     font-size: 18px;
     border-radius: 45px;
     cursor: pointer;
   }
-  #lyricsContent {
+  #lyricsPreview {
     letter-spacing: 1.5px;
     width: 90%;
     margin: 3% auto 0;
     font-size: 14px;
     line-height: 2;
   }
+  #lyricsPreview .english {
+  font-size: 12px; /* 比中文小 */
+}
+  #lyricsContent {
+    letter-spacing: 1.5px;
+    width: 90%;
+    margin: 2% auto 0;
+    font-size: 14px;
+    line-height: 2;
+  }
   #lyricsContent .english {
   font-size: 12px; /* 比中文小 */
 }
+
 
   .image-scroll-container {
     gap: 20px;
@@ -1927,17 +1992,26 @@ body::-webkit-scrollbar-thumb:hover {
 }
 .lyrics-section {
     margin-top: 10%;
-    margin-bottom: 5%;
+    margin-bottom: 10%;
   }
   #toggleLyricsBtn {
     font-size: 16px;
     border-radius: 45px;
     cursor: pointer;
   }
-  #lyricsContent {
+  #lyricsPreview{
     letter-spacing: 1.4px;
     width: 90%;
     margin: 5% auto 0;
+    font-size: 15px;
+  }
+  #lyricsPreview .english {
+  font-size: 13px; /* 比中文小 */
+}
+  #lyricsContent {
+    letter-spacing: 1.4px;
+    width: 90%;
+    margin: 2% auto 0;
     font-size: 15px;
   }
   #lyricsContent .english {
@@ -2038,7 +2112,7 @@ body::-webkit-scrollbar-thumb:hover {
           </a>
           <ul class="dropdown-menu" aria-labelledby="worksDropdown">
             <li><a class="dropdown-item" href="職涯發展迷茫.html">半路</a></li>
-            <li><a class="dropdown-item" href="工作忙碌.html">代辦事項</a></li>
+            <li><a class="dropdown-item" href="工作忙碌.html">待辦事項</a></li>
             <li><a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a></li>
             <li><a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a></li>
             <li><a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a></li>
@@ -2070,7 +2144,7 @@ body::-webkit-scrollbar-thumb:hover {
         </div>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="職涯發展迷茫.html">半路</a>
-          <a class="dropdown-item" href="工作忙碌.html">代辦事項</a>
+          <a class="dropdown-item" href="工作忙碌.html">待辦事項</a>
           <a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a>
           <a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a>
           <a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a>
@@ -2114,7 +2188,7 @@ body::-webkit-scrollbar-thumb:hover {
     <div class="video-container">
       <!-- 封面圖 -->
       <div class="video-thumbnail" id="videoThumbnail">
-        <img src="image/image2.png" alt="影片封面">
+        <img src="image/image2-備用.png" alt="影片封面">
         <div class="play-button">▶</div>
       </div>
   
@@ -2152,13 +2226,15 @@ body::-webkit-scrollbar-thumb:hover {
   <img src="image/雲朵-20.png" alt="雲朵背景">
 </div>
 <!-- 歌詞區塊 -->
-<div class="lyrics-section" id="lyricsSection">
-  <button id="toggleLyricsBtn">查看完整歌詞 ↓</button>
-  <div id="lyricsContent">
+<div class="lyrics-section">
+  <div id="lyricsPreview">
     越是嚮往<br>
     <span class="english">The more I yearn</span><br>
     越是不安模樣<br>
     <span class="english">The harder peace will stay</span><br>
+  </div>
+
+  <div id="lyricsContent">
     你看見她一如既往流浪<br>
     <span class="english">You see her wandering on and on</span><br>
     還不習慣迷茫<br>
@@ -2176,7 +2252,10 @@ body::-webkit-scrollbar-thumb:hover {
     越過 高牆 慢慢到對的地方<br>
     <span class="english">Over the walls, to where our hearts align</span>
   </div>
-  
+
+  <button id="toggleLyricsBtn">查看完整歌詞 ↓</button>
+</div>
+
 </div>
 
 <div class="image-scroll-container">
@@ -2471,15 +2550,25 @@ window.addEventListener('resize', () => {
 
 const toggleBtn = document.getElementById('toggleLyricsBtn');
 const lyricsContent = document.getElementById('lyricsContent');
+const preview = document.getElementById('lyricsPreview'); 
+
 let expanded = false;
 
 toggleBtn.addEventListener('click', () => {
   expanded = !expanded;
+
   lyricsContent.classList.toggle('show', expanded);
   toggleBtn.textContent = expanded ? '收回歌詞 ↑' : '查看完整歌詞 ↓';
 
-  // ⭐ 關鍵這行：切換狀態 class
   toggleBtn.classList.toggle('is-open', expanded);
+ // ⭐⭐ 重點：開啟時取消淡出，收回時恢復淡出
+ if (expanded) {
+    preview.style.maskImage = "none";
+    preview.style.webkitMaskImage = "none";
+  } else {
+    preview.style.maskImage = "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))";
+    preview.style.webkitMaskImage = "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))";
+  }
 });
 
 // 當畫面滾到 soil-section 時，改變浮動圖示顏色

@@ -6,7 +6,7 @@
   <link rel="apple-touch-icon" href="image/頭貼-53.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>代辦事項 To do：rest</title>
+  <title>待辦事項 To do：rest</title>
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -878,6 +878,7 @@ body::-webkit-scrollbar-thumb:hover {
   color: #ffffff;
   border: none;
   padding: 12px 28px;
+  margin-top: 20px;
   font-size: 23px;
   border-radius: 50px;
   cursor: pointer;
@@ -908,38 +909,60 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 
-#lyricsContent {
-  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
+/* 預覽區：只顯示前幾行 */
+#lyricsPreview {
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
   letter-spacing: 2px;
-  position: relative;
   width: 80%;
   margin: 30px auto 0;
   font-size: 20px;
   line-height: 2.2;
   color: #e3b799;
+
+  /* ⭐ 底部淡出（由上到下變淡） */
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
+}
+
+/* 完整歌詞區：你的原始動畫保留 */
+#lyricsContent {
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
+  letter-spacing: 2px;
+  position: relative;
+  width: 80%;
+  margin: 0 auto; /* 預覽已經有 margin，不需要再往下推 */
+  font-size: 20px;
+  line-height: 2.2;
+  color: #e3b799;
+
+  /* 動畫初始狀態 */
   opacity: 0;
   transform: translateY(-20px);
   pointer-events: none;
   overflow: hidden;
   max-height: 0;
-  transition: 
-    opacity 0.6s ease, 
-    transform 0.6s ease, 
-    max-height 0.6s ease; /* 三個動畫合併在一起 */
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    max-height 0.6s ease;
 }
 
+/* 展開狀態：保持你原本設計 */
 #lyricsContent.show {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  max-height: 1500px; /* 可依內容調整 */
+  max-height: 1500px; /* 可調大一點以免內容被切掉 */
 }
-#lyricsContent .english {
-  font-size: 16px; /* 比中文小 */
-  display: inline-block; /* 避免換行問題 */
-  letter-spacing: 1px; /* 可微調 */
-  color: #e3b799; /* 可以跟中文同色 */
+
+#lyricsContent .english,
+#lyricsPreview .english {
+  font-size: 16px;
+  display: inline-block;
+  letter-spacing: 1px;
+  color: #e3b799;
 }
+
 
 
 
@@ -1230,6 +1253,16 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 18px;
   line-height: 2.2;
 }
+#lyricsPreview {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 3% auto 0;
+  font-size: 18px;
+  line-height: 2.2;
+}
+#lyricsPreview .english {
+  font-size: 15px; /* 比中文小 */
+}
 #lyricsContent .english {
   font-size: 15px; /* 比中文小 */
 }
@@ -1344,18 +1377,28 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+#lyricsPreview {
   letter-spacing: 2px;
   width: 80%;
   margin: 3% auto 0;
+  font-size: 17px;
+  line-height: 2.2;
+}
+#lyricsPreview .english {
+  font-size: 14.5px; /* 比中文小 */
+}
+  #lyricsContent {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 1% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1501,18 +1544,28 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+#lyricsPreview {
   letter-spacing: 2px;
   width: 80%;
   margin: 3% auto 0;
+  font-size: 17px;
+  line-height: 2.2;
+}
+#lyricsPreview .english {
+  font-size: 14.5px; /* 比中文小 */
+}
+#lyricsContent {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 2% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1632,18 +1685,28 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-  margin-top: 5%;
-  margin-bottom: 5%; /* 底部空間更大一點 */
+  margin-top: 10%;
+  margin-bottom: 10%; /* 底部空間更大一點 */
   }
   #toggleLyricsBtn {
   font-size: 20px;
   border-radius: 50px;
   cursor: pointer;
 }
-  #lyricsContent {
+#lyricsPreview {
   letter-spacing: 2px;
   width: 80%;
   margin: 3% auto 0;
+  font-size: 17px;
+  line-height: 2.2;
+}
+#lyricsPreview .english {
+  font-size: 15px; /* 比中文小 */
+}
+  #lyricsContent {
+  letter-spacing: 2px;
+  width: 80%;
+  margin: 2% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1772,18 +1835,28 @@ body::-webkit-scrollbar-thumb:hover {
   line-height: 1.8;
 }
   .lyrics-section {
-    margin-top: 5%;
-    margin-bottom: 5%;
+    margin-top: 15%;
+    margin-bottom: 10%;
   }
   #toggleLyricsBtn {
     font-size: 18px;
     border-radius: 45px;
     cursor: pointer;
   }
-  #lyricsContent {
+  #lyricsPreview {
     letter-spacing: 1.5px;
     width: 90%;
     margin: 3% auto 0;
+    font-size: 14px;
+    line-height: 2;
+  }
+  #lyricsPreview .english {
+  font-size: 12px; /* 比中文小 */
+}
+  #lyricsContent {
+    letter-spacing: 1.5px;
+    width: 90%;
+    margin: 2% auto 0;
     font-size: 14px;
     line-height: 2;
   }
@@ -1944,17 +2017,26 @@ body::-webkit-scrollbar-thumb:hover {
 }
 .lyrics-section {
     margin-top: 10%;
-    margin-bottom: 5%;
+    margin-bottom: 10%;
   }
   #toggleLyricsBtn {
     font-size: 16px;
     border-radius: 45px;
     cursor: pointer;
   }
-  #lyricsContent {
+  #lyricsPreview{
     letter-spacing: 1.4px;
     width: 90%;
     margin: 5% auto 0;
+    font-size: 15px;
+  }
+  #lyricsPreview .english {
+  font-size: 13px; /* 比中文小 */
+}
+  #lyricsContent {
+    letter-spacing: 1.4px;
+    width: 90%;
+    margin: 2% auto 0;
     font-size: 15px;
   }
   #lyricsContent .english {
@@ -2058,7 +2140,7 @@ body::-webkit-scrollbar-thumb:hover {
           </a>
           <ul class="dropdown-menu" aria-labelledby="worksDropdown">
             <li><a class="dropdown-item" href="職涯發展迷茫.html">半路</a></li>
-            <li><a class="dropdown-item" href="工作忙碌.html">代辦事項</a></li>
+            <li><a class="dropdown-item" href="工作忙碌.html">待辦事項</a></li>
             <li><a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a></li>
             <li><a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a></li>
             <li><a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a></li>
@@ -2090,7 +2172,7 @@ body::-webkit-scrollbar-thumb:hover {
         </div>
         <div class="dropdown-menu">
           <a class="dropdown-item" href="職涯發展迷茫.html">半路</a>
-          <a class="dropdown-item" href="工作忙碌.html">代辦事項</a>
+          <a class="dropdown-item" href="工作忙碌.html">待辦事項</a>
           <a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a>
           <a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a>
           <a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a>
@@ -2118,7 +2200,7 @@ body::-webkit-scrollbar-thumb:hover {
   <div class="content">
     <img src="image/box4-18.png" alt="前景圖2">
     <div class="text-block">
-      <h1>代辦事項<span class="english">To do:rest</span>
+      <h1>待辦事項<span class="english">To do:rest</span>
         <span class="subtitle">獻給還在逞強的你</span>
       </h1>
       <p>夜深的辦公室裡，文件堆成山。她停下手中的鍵盤，摺起一張紙飛機 ——<br>
@@ -2164,7 +2246,7 @@ body::-webkit-scrollbar-thumb:hover {
   <section class="video-intro">
     <h2 class="video-title"></h2>
     <p class="video-description">
-      《代辦事項 To do: rest》是一首寫給疲憊靈魂的歌。深夜的辦公室裡，燈光映著螢幕的白，她獨自坐在一成不變的座位間，任文件堆疊、郵件閃爍、時間流逝。世界運轉得太快，快到連呼吸都成了一種奢侈。直到那一刻，她停下手，撕下一張便條紙，輕輕摺成紙飛機——讓煩惱飛一陣子。
+      《待辦事項 To do: rest》是一首寫給疲憊靈魂的歌。深夜的辦公室裡，燈光映著螢幕的白，她獨自坐在一成不變的座位間，任文件堆疊、郵件閃爍、時間流逝。世界運轉得太快，快到連呼吸都成了一種奢侈。直到那一刻，她停下手，撕下一張便條紙，輕輕摺成紙飛機——讓煩惱飛一陣子。
 旋律緩緩流動，如同一場心的休課，提醒我們：休息不是懈怠，而是重新整理自己、再次出發的勇氣。這是一首關於釋放與允許的歌，願每個總是太用力的你，也能在忙碌之間，為自己留一個呼吸的空間。
     </p>
   </section>
@@ -2173,13 +2255,15 @@ body::-webkit-scrollbar-thumb:hover {
   <img src="image/雲朵-工作忙碌-20-20.png" alt="雲朵背景">
 </div>
 <!-- 歌詞區塊 -->
-<div class="lyrics-section" id="lyricsSection">
-  <button id="toggleLyricsBtn">查看完整歌詞 ↓</button>
-  <div id="lyricsContent">
+<div class="lyrics-section">
+  <div id="lyricsPreview">
     忙到忘了天黑<br>
     <span class="english">Worked so long I forgot the night has come</span><br>
     困在沉默螢幕前<br>
     <span class="english">Trapped in silence before the glowing screen</span><br>
+  </div>
+
+  <div id="lyricsContent">
     笑容背後藏眼淚<br>
     <span class="english">Behind a smile, the hidden tears still fall</span><br>
     任務清單像山的堆<br>
@@ -2209,6 +2293,10 @@ body::-webkit-scrollbar-thumb:hover {
     再多煩惱也別忘哄自己<br>
     <span class="english">With all my worries, still remember to comfort me</span>
   </div>
+
+  <button id="toggleLyricsBtn">查看完整歌詞 ↓</button>
+</div>
+
   
 </div>
 
@@ -2507,16 +2595,27 @@ window.addEventListener('resize', () => {
 
 const toggleBtn = document.getElementById('toggleLyricsBtn');
 const lyricsContent = document.getElementById('lyricsContent');
+const preview = document.getElementById('lyricsPreview'); 
+
 let expanded = false;
 
 toggleBtn.addEventListener('click', () => {
   expanded = !expanded;
+
   lyricsContent.classList.toggle('show', expanded);
   toggleBtn.textContent = expanded ? '收回歌詞 ↑' : '查看完整歌詞 ↓';
 
-  // ⭐ 關鍵這行：切換狀態 class
   toggleBtn.classList.toggle('is-open', expanded);
+ // ⭐⭐ 重點：開啟時取消淡出，收回時恢復淡出
+ if (expanded) {
+    preview.style.maskImage = "none";
+    preview.style.webkitMaskImage = "none";
+  } else {
+    preview.style.maskImage = "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))";
+    preview.style.webkitMaskImage = "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))";
+  }
 });
+
 
 // 當畫面滾到 soil-section 時，改變浮動圖示顏色
 const socialIcons = document.querySelector(".floating-social");
