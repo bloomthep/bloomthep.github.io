@@ -801,7 +801,34 @@ body::-webkit-scrollbar-thumb:hover {
   margin-top: 2%;
 }
 
+#videoOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
 
+#videoOverlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#closeBtn {
+  position: absolute;
+  top: 2vh;
+  right: 2vw;
+  font-size: clamp(20px, 2vw, 40px);
+  color: white;
+  cursor: pointer;
+  z-index: 10000;
+}
 
 /* 平板 */
 @media (max-width: 1280px){
@@ -1755,7 +1782,7 @@ body::-webkit-scrollbar-thumb:hover {
             </a>
             <ul class="dropdown-menu" aria-labelledby="worksDropdown">
               <li><a class="dropdown-item" href="職涯發展迷茫.html">半路</a></li>
-              <li><a class="dropdown-item" href="工作忙碌.html">代辦事項</a></li>
+              <li><a class="dropdown-item" href="工作忙碌.html">待辦事項</a></li>
               <li><a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a></li>
               <li><a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a></li>
               <li><a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a></li>
@@ -1787,7 +1814,7 @@ body::-webkit-scrollbar-thumb:hover {
           </div>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="職涯發展迷茫.html">半路</a>
-            <a class="dropdown-item" href="工作忙碌.html">代辦事項</a>
+            <a class="dropdown-item" href="工作忙碌.html">待辦事項</a>
             <a class="dropdown-item" href="自我價值低落.html"><span class="english">Unseen Breath</span></a>
             <a class="dropdown-item" href="家務壓力.html">那件衣服忘了曬</a>
             <a class="dropdown-item" href="社會角色期待.html"><span class="english">Bloom My Way</span></a>
@@ -1815,6 +1842,8 @@ body::-webkit-scrollbar-thumb:hover {
         <img src="image/image3.png" alt="img3" class="hero-bg">
         <img src="image/image4.png" alt="img4" class="hero-bg">
         <img src="image/image5.png" alt="img5" class="hero-bg">
+        <img src="image/image6.JPG" alt="img5" class="hero-bg">
+        <img src="image/image7.png" alt="img5" class="hero-bg">
       </div>
       <!-- overlay 要直接鋪滿 -->
       <img src="image/mask-shape1.png" class="overlay" alt="Overlay">
@@ -1823,10 +1852,24 @@ body::-webkit-scrollbar-thumb:hover {
     <div class="hero-content">
       <img src="image/大logo.png" alt="綻息" class="hero-title">
       <p class="lead hero-subtitle">為妳在壓力間留一口氣的柔光</p>
-      <a href="#works" class="btn btn-explore btn-lg mt-3">綻放片刻</a>
+      <a href="#" 
+   class="btn btn-explore btn-lg mt-3"
+   onclick="openVideo()">
+  綻放片刻
+</a>
     </div>
   </div>
 </header>
+
+<div id="videoOverlay">
+
+  <span id="closeBtn" onclick="closeVideo()">✕</span>
+
+  <video id="promoVideo" controls>
+    <source src="image/宣傳片.mp4" type="video/mp4">
+  </video>
+
+</div>
 
 <!-- About Section -->
 <section id="about" class="py-5" style="background-color: #f0e9dd;">
@@ -2026,7 +2069,33 @@ body::-webkit-scrollbar-thumb:hover {
     observer.observe(el);
   });
   </script>
+<script>
 
+let played = false
+
+function openVideo() {
+  const overlay = document.getElementById("videoOverlay")
+  const video = document.getElementById("promoVideo")
+
+  overlay.style.display = "flex"
+  video.play()
+  played = true
+}
+
+function closeVideo() {
+  const overlay = document.getElementById("videoOverlay")
+  const video = document.getElementById("promoVideo")
+
+  video.pause()
+  video.currentTime = 0
+  overlay.style.display = "none"
+
+  if (played) {
+    location.href = "index.html"
+  }
+}
+  
+  </script>
 <script>
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -2501,7 +2570,13 @@ window.addEventListener('DOMContentLoaded', () => {
   }, 2800);
 });
 
- 
+const videoModal = document.getElementById('videoModal')
+const video = document.getElementById('promoVideo')
+
+videoModal.addEventListener('hidden.bs.modal', function () {
+  video.pause()
+  video.currentTime = 0
+})
  
  </script>
 
