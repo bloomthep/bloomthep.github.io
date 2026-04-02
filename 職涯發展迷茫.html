@@ -480,13 +480,6 @@ body {
   }
 }
 
-
-
-
-
-
-
-
 /* 整個頁面滾輪 */
 body::-webkit-scrollbar {
   width: 12px;              /* 滾輪寬度 */
@@ -505,7 +498,6 @@ body::-webkit-scrollbar-thumb {
 body::-webkit-scrollbar-thumb:hover {
   background-color: #dcd783; /* 滾塊滑過顏色 */
 }
-
     /* 引入 ChenYuluoyan-2.0-Thin 字體 */
 @font-face {
   font-family: 'ChenYuluoyan';
@@ -649,7 +641,6 @@ body::-webkit-scrollbar-thumb:hover {
   display: inline-block;
   vertical-align: middle;
   letter-spacing: 2px;
-  text-shadow: none; /* 🔥 清除任何光暈 */
 }
     .text-block p {
       font-size: 1.2rem;
@@ -841,8 +832,7 @@ body::-webkit-scrollbar-thumb:hover {
   .content {
   animation-delay: 2.8s;
 }
-
-
+  
   /* 不顯示開場圖與按鈕 */
   #introOverlay,
   #introImage,
@@ -894,7 +884,7 @@ body::-webkit-scrollbar-thumb:hover {
 @media (hover: none) {
   #toggleLyricsBtn.is-open {
     background-color: #d8a787;
-    color: #7d5f4f;
+    color: #ffffff;
   }
 }
 
@@ -902,6 +892,7 @@ body::-webkit-scrollbar-thumb:hover {
 #toggleLyricsBtn:focus {
   outline: none;
 }
+
 
 
 /* 預覽區：只顯示前幾行 */
@@ -925,12 +916,11 @@ body::-webkit-scrollbar-thumb:hover {
   letter-spacing: 2px;
   position: relative;
   width: 80%;
-  margin: 0 auto; /* 預覽已經有 margin，不需要再往下推 */
+  margin: 0 auto;
+  margin-top: 10px;
   font-size: 20px;
   line-height: 2.2;
   color: #7d5f4f;
-
-  /* 動畫初始狀態 */
   opacity: 0;
   transform: translateY(-20px);
   pointer-events: none;
@@ -942,14 +932,12 @@ body::-webkit-scrollbar-thumb:hover {
     max-height 0.6s ease;
 }
 
-/* 展開狀態：保持你原本設計 */
 #lyricsContent.show {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  max-height: 1500px; /* 可調大一點以免內容被切掉 */
+  max-height: 1500px; /* 可依內容調整 */
 }
-
 #lyricsContent .english,
 #lyricsPreview .english {
   font-size: 16px;
@@ -957,7 +945,6 @@ body::-webkit-scrollbar-thumb:hover {
   letter-spacing: 1px;
   color: #7d5f4f;
 }
-
 
 
 
@@ -1033,8 +1020,8 @@ body::-webkit-scrollbar-thumb:hover {
 
 .image-scroll {
   display: flex;
-  overflow-x: hidden; /* 不讓圖片超出 */
-  overflow-y: hidden; /* 🔥 加這行 */
+  overflow-x: hidden; 
+  overflow-y: hidden; 
   scroll-behavior: smooth;
   gap: 50px;
   width: 80%; /* 控制可視區寬度 */
@@ -1146,7 +1133,6 @@ body::-webkit-scrollbar-thumb:hover {
 
 .footer-with-bg .footer-text {
   color: white;
-  font-weight: 600;
   text-align: center;
   font-size: clamp(15px, 2vw, 20px); /* 文字隨螢幕縮放 */
   padding: 0 10px;
@@ -1232,7 +1218,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 19px;
   line-height: 1.8;
 }
-  .lyrics-section {
+.lyrics-section {
   margin-top: 5%;
   margin-bottom: 5%; /* 底部空間更大一點 */
   }
@@ -1255,10 +1241,8 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 18px;
   line-height: 2.2;
 }
+#lyricsContent .english,
 #lyricsPreview .english {
-  font-size: 15px; /* 比中文小 */
-}
-#lyricsContent .english {
   font-size: 15px; /* 比中文小 */
 }
 .image-scroll-container {
@@ -1371,7 +1355,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 18px;
   line-height: 1.8;
 }
-  .lyrics-section {
+.lyrics-section {
   margin-top: 10%;
   margin-bottom: 10%; /* 底部空間更大一點 */
   }
@@ -1538,7 +1522,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 18px;
   line-height: 1.8;
 }
-  .lyrics-section {
+.lyrics-section {
   margin-top: 10%;
   margin-bottom: 10%; /* 底部空間更大一點 */
   }
@@ -1679,7 +1663,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 16px;
   line-height: 1.8;
 }
-  .lyrics-section {
+.lyrics-section {
   margin-top: 10%;
   margin-bottom: 10%; /* 底部空間更大一點 */
   }
@@ -1701,7 +1685,7 @@ body::-webkit-scrollbar-thumb:hover {
   #lyricsContent {
   letter-spacing: 2px;
   width: 80%;
-  margin: 2% auto 0;
+  margin: 1% auto 0;
   font-size: 17px;
   line-height: 2.2;
 }
@@ -1829,7 +1813,7 @@ body::-webkit-scrollbar-thumb:hover {
   font-size: 14px;
   line-height: 1.8;
 }
-  .lyrics-section {
+.lyrics-section {
     margin-top: 15%;
     margin-bottom: 10%;
   }
@@ -1858,6 +1842,7 @@ body::-webkit-scrollbar-thumb:hover {
   #lyricsContent .english {
   font-size: 12px; /* 比中文小 */
 }
+
 
   .image-scroll-container {
     gap: 20px;
@@ -1984,8 +1969,8 @@ body::-webkit-scrollbar-thumb:hover {
   }
   .text-block h1 .subtitle {
     position: relative;
-    top: -46px; /* 正值往下、負值往上 */
-    left: -148px;
+    top: -75px; /* 正值往下、負值往上 */
+    left: -10px;
     font-size: 0.55em;
     letter-spacing: 0px;
     margin-left: 8px;
@@ -2099,8 +2084,6 @@ body::-webkit-scrollbar-thumb:hover {
   
 }
 
-
-
 /* 🔧 防止 page-bg 影響 hover／click */
 .page-bg {
   z-index: -9999 !important;
@@ -2108,13 +2091,14 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 
+
+
+
+
   </style>
 </head>
 
 <body>
-
-
-  
   <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
   <div class="container">
@@ -2197,12 +2181,11 @@ body::-webkit-scrollbar-thumb:hover {
   <div class="content">
     <img src="image/box1-18.png" alt="前景圖2">
     <div class="text-block">
-      <h1> 半路 <span class="english">Halfway</span>
+      <h1>半路 Halfway<span class="english"></span>
         <span class="subtitle">獻給還在摸索的你</span>
       </h1>
-      <p>坐在列車上，她的心裡帶著不安與猶豫，慢慢學著擁抱還沒理清的自己。<br>
-        隨著窗外景色徐徐展開，她也漸漸放鬆，感受旅程的呼吸與節奏。</p>
-      </div>
+      <p>坐在列車上，她的心裡帶著不安與猶豫，慢慢學著擁抱還沒理清的自己。<br>隨著窗外景色徐徐展開，她也漸漸放鬆，感受旅程的呼吸與節奏。</p>
+    </div>
   </div>
   <div class="after-content">
     <img src="image/box2-18.png" alt="">
@@ -2245,7 +2228,7 @@ body::-webkit-scrollbar-thumb:hover {
     <p class="video-description">
       《半路 Halfway》是一首關於迷茫、觀望與自我接納的歌曲。窗外的景色時而近，時而遠，像心中的思緒忽明忽暗。小律停下腳步，凝望遠方，不急於踏出下一步。不安與猶豫在空氣中流動，卻又被溫柔包覆。在尚未明朗的旅途中，他學會陪伴自己，慢慢呼吸，感受每一段路的節奏與溫度。這是一段心靈的旅程，在旋律中學會接納未完全清晰的自己，感受旅途中的呼吸、節奏與溫柔，在不確定中，也能感受到前行的力量。
     </p>
-  </section>
+     </section>
     
 <div class="page-bg">
   <img src="image/雲朵-20.png" alt="雲朵背景">
@@ -2317,7 +2300,7 @@ body::-webkit-scrollbar-thumb:hover {
   <button class="scroll-btn right-btn"></button>
 </div>
 
-<!-- 懸浮社群 icon -->
+ <!-- 懸浮社群 icon -->
 <div class="floating-social">
   <a href="https://www.instagram.com/bloomth_.ep/?utm_source=ig_web_button_share_sheet" target="_blank" class="social-icon-float">
     <i class="bi bi-instagram"></i>
@@ -2337,6 +2320,7 @@ body::-webkit-scrollbar-thumb:hover {
 <div id="pageTransition"></div>
 <img id="transitionLogo" src="image/英文logo.png" alt="Logo">
 </body>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
@@ -2400,8 +2384,6 @@ document.querySelectorAll('.dropdown-title').forEach(title => {
     toggleDropdown(dropdown);
   });
 });
-
-
 
   // 滾動 navbar 背景 + 漢堡顏色（overlay 關閉時才有效）
   window.addEventListener('scroll', () => {
@@ -2541,7 +2523,6 @@ function getMaxUpOffset() {
 }
 
 
-
 // 初始化目前裝置設定
 let maxUpOffset = getMaxUpOffset();
 
@@ -2558,7 +2539,6 @@ setTimeout(() => {
     topVideo.style.opacity = '1';
   });
 }, delay);
-
 
 // 🪶 視差滾動效果
 window.addEventListener('scroll', () => {
@@ -2661,65 +2641,65 @@ document.querySelectorAll('.flip-card').forEach(card => {
 </script>
 
 <script>
- const cursor = document.querySelector('.cursor');
-const canvas = document.getElementById('trail');
-const ctx = canvas.getContext('2d');
-const transition = document.getElementById('pageTransition');
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-let lastTime = 0;
-
-// --- 共用產生粒子函式 ---
-function createParticle(x, y) {
-  const now = Date.now();
-  if (now - lastTime > 40) {
-    particles.push({
-      x, y,
-      alpha: 1,
-      size: Math.random()*4 + 2,
-      dx: (Math.random()-0.5)*1.2,
-      dy: (Math.random()-0.5)*1.2,
-      color: ['rgba(250,178,146,0.9)','rgba(250,178,146,0.8)','rgba(255,215,150,0.8)'][Math.floor(Math.random()*3)]
-    });
-    lastTime = now;
-  }
-  if(particles.length>80) particles.shift();
-}
-
-// --- 光粒繪製 ---
-function draw() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach((p,i)=>{
-    p.x += p.dx; p.y += p.dy;
-    p.alpha -= 0.012;
-    if(p.alpha <= 0) particles.splice(i,1);
-    else {
-      ctx.beginPath();
-      const fadeColor = p.color.replace(/[\d.]+\)$/g,`${p.alpha})`);
-      ctx.fillStyle = fadeColor;
-      ctx.shadowColor = fadeColor;
-      ctx.shadowBlur = 15;
-      ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
-      ctx.fill();
-    }
-  });
-  requestAnimationFrame(draw);
-}
-draw();
-
-// --- 桌機滑鼠事件 ---
-document.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX+'px';
-  cursor.style.top = e.clientY+'px';
-  cursor.style.opacity = 1;
-  createParticle(e.clientX, e.clientY);
-});
-
-// --- 手機觸控事件 ---
-document.addEventListener('touchstart', e => {
+  const cursor = document.querySelector('.cursor');
+ const canvas = document.getElementById('trail');
+ const ctx = canvas.getContext('2d');
+ const transition = document.getElementById('pageTransition');
+ 
+ canvas.width = window.innerWidth;
+ canvas.height = window.innerHeight;
+ 
+ let particles = [];
+ let lastTime = 0;
+ 
+ // --- 共用產生粒子函式 ---
+ function createParticle(x, y) {
+   const now = Date.now();
+   if (now - lastTime > 40) {
+     particles.push({
+       x, y,
+       alpha: 1,
+       size: Math.random()*4 + 2,
+       dx: (Math.random()-0.5)*1.2,
+       dy: (Math.random()-0.5)*1.2,
+       color: ['rgba(250,178,146,0.9)','rgba(250,178,146,0.8)','rgba(255,215,150,0.8)'][Math.floor(Math.random()*3)]
+     });
+     lastTime = now;
+   }
+   if(particles.length>80) particles.shift();
+ }
+ 
+ // --- 光粒繪製 ---
+ function draw() {
+   ctx.clearRect(0,0,canvas.width,canvas.height);
+   particles.forEach((p,i)=>{
+     p.x += p.dx; p.y += p.dy;
+     p.alpha -= 0.012;
+     if(p.alpha <= 0) particles.splice(i,1);
+     else {
+       ctx.beginPath();
+       const fadeColor = p.color.replace(/[\d.]+\)$/g,`${p.alpha})`);
+       ctx.fillStyle = fadeColor;
+       ctx.shadowColor = fadeColor;
+       ctx.shadowBlur = 15;
+       ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+       ctx.fill();
+     }
+   });
+   requestAnimationFrame(draw);
+ }
+ draw();
+ 
+ // --- 桌機滑鼠事件 ---
+ document.addEventListener('mousemove', e => {
+   cursor.style.left = e.clientX+'px';
+   cursor.style.top = e.clientY+'px';
+   cursor.style.opacity = 1;
+   createParticle(e.clientX, e.clientY);
+ });
+ 
+ // --- 手機觸控事件 ---
+ document.addEventListener('touchstart', e => {
   const touch = e.touches[0];
   cursor.style.left = touch.clientX + 'px';
   cursor.style.top = touch.clientY + 'px';
@@ -2733,22 +2713,20 @@ document.addEventListener('touchstart', e => {
   // 可同時產生粒子效果
   createParticle(touch.clientX, touch.clientY);
 });
-
-document.addEventListener('touchmove', e=>{
-  const touch = e.touches[0];
-  cursor.style.left = touch.clientX+'px';
-  cursor.style.top = touch.clientY+'px';
-  cursor.style.opacity = 1;
-  createParticle(touch.clientX, touch.clientY);
-});
-
-document.addEventListener('touchend', ()=>{
-  cursor.style.opacity = 0;
-});
-
-
-
-// ------------------- 點擊轉場（桌機用） -------------------
+ 
+ document.addEventListener('touchmove', e=>{
+   const touch = e.touches[0];
+   cursor.style.left = touch.clientX+'px';
+   cursor.style.top = touch.clientY+'px';
+   cursor.style.opacity = 1;
+   createParticle(touch.clientX, touch.clientY);
+ });
+ 
+ document.addEventListener('touchend', ()=>{
+   cursor.style.opacity = 0;
+ });
+ 
+ // ------------------- 點擊轉場（桌機用） -------------------
 document.querySelectorAll('a').forEach(link => {
   link.addEventListener('click', e => {
     if (isMobile) return; // 手機版不做桌機動畫
@@ -2835,10 +2813,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
- 
-</script>
-
+ </script>
     
     
 </html>
