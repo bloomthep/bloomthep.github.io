@@ -1979,6 +1979,7 @@ body::-webkit-scrollbar-thumb:hover {
     position: relative;
     top: 5px;
     font-size: 1.6rem;
+    margin-bottom: -5%;
   }
   .text-block h1 .english {
     font-size: 1.6rem;
@@ -1992,8 +1993,8 @@ body::-webkit-scrollbar-thumb:hover {
   }
   .text-block h1 .subtitle {
     position: relative;
-    top: -46px; /* 正值往下、負值往上 */
-    left: -148px;
+    top: -75px; /* 正值往下、負值往上 */
+    left: -10px;
     font-size: 0.55em;
     letter-spacing: 0px;
     margin-left: 8px;
@@ -2068,7 +2069,8 @@ body::-webkit-scrollbar-thumb:hover {
   z-index: -1;
   pointer-events: none;
   }
-
+}
+@media (max-width: 400px) {
   /* Navbar 再縮小一點 */
   .navbar-brand img {
     height: 30px;
