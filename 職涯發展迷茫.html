@@ -6,12 +6,11 @@
   <link rel="apple-touch-icon" href="image/頭貼-53.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>半路 Halfway</title>
+  <title>半路</title>
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-
-@font-face {
+  @font-face {
   font-family: "HanyiSentySeaSpray";
   src: url("HanyiSentySeaSpray.woff2") format("woff2"),
        url("HanyiSentySeaSpray.ttf") format("truetype");
@@ -626,7 +625,7 @@ body::-webkit-scrollbar-thumb:hover {
     /* h1 中文保持原字體，英文改成 ChenYuluoyan */
 .text-block h1 .english {
   font-family: 'ChenYuluoyan', sans-serif;
-  font-size: 2.2rem; /* 可調整大小 */
+  font-size: 2.4rem; /* 可調整大小 */
   font-weight: 600; /* 或 bold */
   margin-left: 10px;
 }
@@ -832,7 +831,6 @@ body::-webkit-scrollbar-thumb:hover {
   .content {
   animation-delay: 2.8s;
 }
-  
   /* 不顯示開場圖與按鈕 */
   #introOverlay,
   #introImage,
@@ -892,9 +890,6 @@ body::-webkit-scrollbar-thumb:hover {
 #toggleLyricsBtn:focus {
   outline: none;
 }
-
-
-
 /* 預覽區：只顯示前幾行 */
 #lyricsPreview {
   font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
@@ -910,14 +905,12 @@ body::-webkit-scrollbar-thumb:hover {
   -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0));
 }
 
-/* 完整歌詞區：你的原始動畫保留 */
 #lyricsContent {
-  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif;
+  font-family: "Noto Sans", "Microsoft JhengHei", sans-serif; /* 段落用易讀字體 */
   letter-spacing: 2px;
   position: relative;
   width: 80%;
-  margin: 0 auto;
-  margin-top: 10px;
+  margin: 10px auto 0;
   font-size: 20px;
   line-height: 2.2;
   color: #7d5f4f;
@@ -926,17 +919,17 @@ body::-webkit-scrollbar-thumb:hover {
   pointer-events: none;
   overflow: hidden;
   max-height: 0;
-  transition:
-    opacity 0.6s ease,
-    transform 0.6s ease,
-    max-height 0.6s ease;
+  transition: 
+    opacity 0.6s ease, 
+    transform 0.6s ease, 
+    max-height 0.6s ease; /* 三個動畫合併在一起 */
 }
 
 #lyricsContent.show {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  max-height: 1500px; /* 可依內容調整 */
+  max-height: 800px; /* 可依內容調整 */
 }
 #lyricsContent .english,
 #lyricsPreview .english {
@@ -1193,7 +1186,7 @@ body::-webkit-scrollbar-thumb:hover {
       text-align: left;
     }
     .text-block h1 .english {
-      font-size: 2.2rem; /* 可調整大小 */
+      font-size: 2.6rem; /* 可調整大小 */
     }
     .text-block h1 .subtitle {
       font-size: 0.55em;
@@ -1330,7 +1323,7 @@ body::-webkit-scrollbar-thumb:hover {
       text-align: left;
     }
     .text-block h1 .english {
-      font-size: 2.2rem; /* 可調整大小 */
+      font-size: 2.4rem; /* 可調整大小 */
     }
     .text-block h1 .subtitle {
       font-size: 0.55em;
@@ -1497,7 +1490,7 @@ body::-webkit-scrollbar-thumb:hover {
       text-align: left;
     }
     .text-block h1 .english {
-      font-size: 2.2rem; /* 可調整大小 */
+      font-size: 2.6rem; /* 可調整大小 */
     }
     .text-block h1 .subtitle {
       font-size: 0.55em;
@@ -1509,7 +1502,7 @@ body::-webkit-scrollbar-thumb:hover {
       font-size: 1.2rem;
       line-height: 1.6;
       letter-spacing: 2px;
-    }  
+    } 
     .video-section {
   padding: 4% 0;
   }
@@ -1638,7 +1631,7 @@ body::-webkit-scrollbar-thumb:hover {
       text-align: left;
     }
     .text-block h1 .english {
-      font-size: 2rem; /* 可調整大小 */
+      font-size: 2.2rem; /* 可調整大小 */
     }
     .text-block h1 .subtitle {
       font-size: 0.5em;
@@ -1740,7 +1733,16 @@ body::-webkit-scrollbar-thumb:hover {
   transition: opacity 0.6s ease;
 }
 }
-
+@media (max-width: 780px) {
+  .text-block {
+    top: 38%;
+    left: 45%;
+    width: 95%;
+    max-width: 80%;
+  }
+  .text-block p br {
+    display: none;
+}}
 /* 小螢幕 / 手機 */
 @media (max-width: 600px) {
   .top-image {
@@ -1788,7 +1790,7 @@ body::-webkit-scrollbar-thumb:hover {
     text-align: left;
   }
   .text-block h1 .english {
-    font-size: 1.5rem;
+    font-size: 1.7rem;
   }
   .text-block h1 .subtitle {
     font-size: 0.5.5em;
@@ -1842,7 +1844,6 @@ body::-webkit-scrollbar-thumb:hover {
   #lyricsContent .english {
   font-size: 12px; /* 比中文小 */
 }
-
 
   .image-scroll-container {
     gap: 20px;
@@ -1955,10 +1956,9 @@ body::-webkit-scrollbar-thumb:hover {
     position: relative;
     top: 5px;
     font-size: 1.6rem;
-    margin-bottom: -5%;
   }
   .text-block h1 .english {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
   .text-block p {
     font-size: 0.95rem;
@@ -1969,8 +1969,8 @@ body::-webkit-scrollbar-thumb:hover {
   }
   .text-block h1 .subtitle {
     position: relative;
-    top: -75px; /* 正值往下、負值往上 */
-    left: -10px;
+    top: -46px; /* 正值往下、負值往上 */
+    left: -148px;
     font-size: 0.55em;
     letter-spacing: 0px;
     margin-left: 8px;
@@ -2181,10 +2181,11 @@ body::-webkit-scrollbar-thumb:hover {
   <div class="content">
     <img src="image/box1-18.png" alt="前景圖2">
     <div class="text-block">
-      <h1>半路 Halfway<span class="english"></span>
-        <span class="subtitle">獻給還在摸索的你</span>
+      <h1><span class="english">Bloom my way</span>
+        <span class="subtitle">獻給慢慢綻放的你</span>
       </h1>
-      <p>坐在列車上，她的心裡帶著不安與猶豫，慢慢學著擁抱還沒理清的自己。<br>隨著窗外景色徐徐展開，她也漸漸放鬆，感受旅程的呼吸與節奏。</p>
+      <p>坐在列車上，她的心裡帶著不安與猶豫，慢慢學著擁抱還沒理清的自己。<br>
+        隨著窗外景色徐徐展開，她也漸漸放鬆，感受旅程的呼吸與節奏。</p>
     </div>
   </div>
   <div class="after-content">
@@ -2260,6 +2261,7 @@ body::-webkit-scrollbar-thumb:hover {
     越過 高牆 慢慢到對的地方<br>
     <span class="english">Over the walls, to where our hearts align</span>
   </div>
+
 
   <button id="toggleLyricsBtn">查看完整歌詞 ↓</button>
 </div>
@@ -2556,7 +2558,6 @@ window.addEventListener('resize', () => {
   maxUpOffset = getMaxUpOffset();
 });
 
-
 const toggleBtn = document.getElementById('toggleLyricsBtn');
 const lyricsContent = document.getElementById('lyricsContent');
 const preview = document.getElementById('lyricsPreview'); 
@@ -2579,7 +2580,6 @@ toggleBtn.addEventListener('click', () => {
     preview.style.webkitMaskImage = "linear-gradient(to bottom, rgba(0,0,0,1), rgba(0,0,0,0))";
   }
 });
-
 
 // 當畫面滾到 soil-section 時，改變浮動圖示顏色
 const socialIcons = document.querySelector(".floating-social");
@@ -2811,7 +2811,6 @@ window.addEventListener('DOMContentLoaded', () => {
     logo.style.opacity = 0;
   }, 2800);
 });
-
 
  </script>
     
