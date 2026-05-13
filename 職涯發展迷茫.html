@@ -2214,6 +2214,29 @@ body::-webkit-scrollbar-thumb:hover {
 
   transition: 0.5s;
 }
+.page img{
+  opacity: 1;
+
+  transition:
+  opacity 0.45s ease,
+  transform 0.45s ease;
+}
+
+/* 淡出 */
+
+.page img.fade-out{
+  opacity: 0;
+
+  transform: scale(1.01);
+}
+
+/* 淡入 */
+
+.page img.fade-in{
+  opacity: 1;
+
+  transform: scale(1);
+}
 
 /* 中間書脊 */
 .book-center{
@@ -2592,7 +2615,7 @@ body::-webkit-scrollbar-thumb:hover {
 </div>
 <div class="mobile-pdf-btn">
 
-  <a href="pdf/手工書掃描.pdf" target="_blank">
+  <a href="pdf/半路.pdf" target="_blank">
     點擊觀看日記
   </a>
 
@@ -3109,19 +3132,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 const dots = document.querySelectorAll('.dot');
-/* ===== 圓點點擊跳頁 ===== */
-
-dots.forEach((dot, index) => {
-
-dot.addEventListener('click', () => {
-
-  currentIndex = index * 2;
-
-  updateBook();
-
-});
-
-});
 
 const pages = [
   "image/手工書掃描-5.jpg",
@@ -3148,11 +3158,43 @@ const rightPage = document.getElementById("rightPage");
 const nextBook = document.querySelector(".next-book");
 const prevBook = document.querySelector(".prev-book");
 
-/* 更新頁面 */
+/* ===== 更新書本 ===== */
+
 function updateBook(){
 
-leftPage.src = pages[currentIndex];
-rightPage.src = pages[currentIndex + 1];
+/* ===== 先移除 fade-in ===== */
+
+leftPage.classList.remove('fade-in');
+rightPage.classList.remove('fade-in');
+
+/* ===== 加入 fade-out ===== */
+
+leftPage.classList.add('fade-out');
+rightPage.classList.add('fade-out');
+
+setTimeout(() => {
+
+  /* ===== 更新圖片 ===== */
+
+  leftPage.src = pages[currentIndex];
+  rightPage.src = pages[currentIndex + 1];
+
+  /* ===== 移除 fade-out ===== */
+
+  leftPage.classList.remove('fade-out');
+  rightPage.classList.remove('fade-out');
+
+  /* ===== 強制重新觸發動畫 ===== */
+
+  void leftPage.offsetWidth;
+  void rightPage.offsetWidth;
+
+  /* ===== 再加入 fade-in ===== */
+
+  leftPage.classList.add('fade-in');
+  rightPage.classList.add('fade-in');
+
+}, 220);
 
 /* ===== 更新圓點 ===== */
 
@@ -3160,11 +3202,26 @@ dots.forEach(dot => {
   dot.classList.remove('active');
 });
 
-dots[currentIndex / 2].classList.add('active');
+dots[Math.floor(currentIndex / 2)].classList.add('active');
 
 }
 
-/* 下一頁 */
+/* ===== 圓點點擊跳頁 ===== */
+
+dots.forEach((dot, index) => {
+
+  dot.addEventListener('click', () => {
+
+    currentIndex = index * 2;
+
+    updateBook();
+
+  });
+
+});
+
+/* ===== 下一頁 ===== */
+
 nextBook.addEventListener("click", () => {
 
   currentIndex += 2;
@@ -3177,7 +3234,8 @@ nextBook.addEventListener("click", () => {
 
 });
 
-/* 上一頁 */
+/* ===== 上一頁 ===== */
+
 prevBook.addEventListener("click", () => {
 
   currentIndex -= 2;
@@ -3189,6 +3247,7 @@ prevBook.addEventListener("click", () => {
   updateBook();
 
 });
+
 /* ===== 按鈕 hover 換圖 ===== */
 
 const prevBtnImg = document.querySelector('.prev-book img');
@@ -3222,6 +3281,9 @@ nextBtnImg.addEventListener('mouseleave', () => {
 
 });
 
+/* ===== 初始載入 ===== */
+
+updateBook();
  </script>
     
     
